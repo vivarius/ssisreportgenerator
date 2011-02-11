@@ -100,6 +100,7 @@
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.label12 = new System.Windows.Forms.Label();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -303,11 +304,11 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(11, 155);
+            this.label11.Location = new System.Drawing.Point(4, 155);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(79, 13);
+            this.label11.Size = new System.Drawing.Size(82, 13);
             this.label11.TabIndex = 49;
-            this.label11.Text = "Selected report";
+            this.label11.Text = "Selected report:";
             // 
             // cmbReportName
             // 
@@ -330,7 +331,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(11, 131);
+            this.label4.Location = new System.Drawing.Point(15, 130);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(71, 13);
             this.label4.TabIndex = 45;
@@ -382,7 +383,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 61);
+            this.label2.Location = new System.Drawing.Point(23, 61);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(63, 13);
             this.label2.TabIndex = 2;
@@ -409,7 +410,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 32);
+            this.label1.Location = new System.Drawing.Point(32, 32);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(54, 13);
             this.label1.TabIndex = 0;
@@ -802,6 +803,15 @@
             this.columnHeader3.Text = "Snapshot ID";
             this.columnHeader3.Width = 140;
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(1, 524);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(41, 13);
+            this.label12.TabIndex = 3;
+            this.label12.Text = "label12";
+            // 
             // frmEditProperties
             // 
             this.AcceptButton = this.btOk;
@@ -809,6 +819,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btCancel;
             this.ClientSize = new System.Drawing.Size(763, 546);
+            this.Controls.Add(this.label12);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.btCancel);
             this.Controls.Add(this.btOk);
@@ -832,6 +843,7 @@
             this.tabPage4.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -906,6 +918,7 @@
         private System.Windows.Forms.Label lbSelectedReportName;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label lbRenderedReportName;
+        private System.Windows.Forms.Label label12;
 
     }
 }

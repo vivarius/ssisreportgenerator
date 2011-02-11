@@ -113,6 +113,11 @@ namespace SSISReportGeneratorTask100
                         cmbConfigurationFile.Text = _taskHost.Properties[NamedStringMembers.DESTINATION_FILE].GetValue(_taskHost).ToString();
                         cmbReportName.Text = _taskHost.Properties[NamedStringMembers.REPORTNAME_EXPRESSION].GetValue(_taskHost).ToString();
 
+                        if (_taskHost.Properties[NamedStringMembers.CONFIGURATION_TYPE].GetValue(_taskHost).ToString() == ConfigurationType.TASK_VARIABLE)
+                            optChooseVariable.Checked = true;
+                        if (_taskHost.Properties[NamedStringMembers.CONFIGURATION_TYPE].GetValue(_taskHost).ToString() == ConfigurationType.FILE_CONNECTOR)
+                            optChooseConfigFileConnector.Checked = true;
+
                         tvReportServerSource.Scrollable = true;
 
                         tvReportServerSource.SelectedNode = SourceNode = TreeViewHandling.FindRecursive(tvReportServerSource.Nodes[0], _reportName, _reportPath);
@@ -533,13 +538,13 @@ namespace SSISReportGeneratorTask100
                 return;
             }
 
-            if (cmbConfigurationFile.SelectedItem.ToString().Trim() == string.Empty)
+            if (cmbConfigurationFile.SelectedItem == null && string.IsNullOrEmpty(cmbConfigurationFile.Text))
             {
                 MessageBox.Show("Please choose the destination of the exported file");
                 cmbConfigurationFile.Focus();
                 return;
             }
-
+            
             //Save the values
             _taskHost.Properties[NamedStringMembers.REPORTSERVER].SetValue(_taskHost, cmbSourceVariables.Text);
             _taskHost.Properties[NamedStringMembers.REPORTNAME].SetValue(_taskHost, tvReportServerSource.SelectedNode.Text);
@@ -567,12 +572,14 @@ namespace SSISReportGeneratorTask100
         private void optChooseConfigFileConnector_CheckedChanged(object sender, EventArgs e)
         {
             btConfigFileExpression.Enabled = optChooseVariable.Checked;
+            cmbConfigurationFile.Items.Clear();
             LoadConfigFileConnections();
         }
 
         private void optChooseVariable_CheckedChanged(object sender, EventArgs e)
         {
             btConfigFileExpression.Enabled = optChooseVariable.Checked;
+            cmbConfigurationFile.Items.Clear();
             cmbConfigurationFile.Items.AddRange(LoadVariables("System.String").ToArray());
         }
 

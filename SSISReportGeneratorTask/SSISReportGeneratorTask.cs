@@ -16,7 +16,7 @@ namespace SSISReportGeneratorTask100.SSIS
         DisplayName = "SSRS Report Generator Task",
         UITypeName = "SSISReportGeneratorTask100.SSISReportGeneratorTaskUIInterface" +
         ",SSISReportGeneratorTask100," +
-        "Version=1.0.0.78," +
+        "Version=1.1.0.0," +
         "Culture=Neutral," +
         "PublicKeyToken=baf53b3fe9523f48",
         TaskContact = "cosmin.vlasiu@gmail.com",
