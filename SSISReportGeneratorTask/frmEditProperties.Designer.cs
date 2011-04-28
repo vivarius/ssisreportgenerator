@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmEditProperties));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btOk = new System.Windows.Forms.Button();
             this.btCancel = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -631,9 +631,9 @@
             // 
             // grdColExpression
             // 
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(2);
-            this.grdColExpression.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(2);
+            this.grdColExpression.DefaultCellStyle = dataGridViewCellStyle2;
             this.grdColExpression.HeaderText = "f(x)";
             this.grdColExpression.Name = "grdColExpression";
             this.grdColExpression.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -806,11 +806,13 @@
             // label12
             // 
             this.label12.AutoSize = true;
+            this.label12.Cursor = System.Windows.Forms.Cursors.Hand;
             this.label12.Location = new System.Drawing.Point(1, 524);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(41, 13);
+            this.label12.Size = new System.Drawing.Size(196, 13);
             this.label12.TabIndex = 3;
-            this.label12.Text = "label12";
+            this.label12.Text = "http://ssisreportgenerator.codeplex.com";
+            this.label12.Click += new System.EventHandler(this.label12_Click);
             // 
             // frmEditProperties
             // 

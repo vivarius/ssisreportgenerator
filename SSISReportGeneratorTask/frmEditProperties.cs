@@ -544,7 +544,7 @@ namespace SSISReportGeneratorTask100
                 cmbConfigurationFile.Focus();
                 return;
             }
-            
+
             //Save the values
             _taskHost.Properties[NamedStringMembers.REPORTSERVER].SetValue(_taskHost, cmbSourceVariables.Text);
             _taskHost.Properties[NamedStringMembers.REPORTNAME].SetValue(_taskHost, tvReportServerSource.SelectedNode.Text);
@@ -665,6 +665,11 @@ namespace SSISReportGeneratorTask100
                     lbRenderedReportName.Text = EvaluateExpression(cmbReportName.Text, _taskHost.VariableDispenser).ToString();
                 }
             }
+        }
+
+        private void label12_Click(object sender, EventArgs e)
+        {
+
         }
 
         #endregion
