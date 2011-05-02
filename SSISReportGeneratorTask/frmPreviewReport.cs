@@ -18,7 +18,7 @@ namespace SSISReportGeneratorTask100
         public void PreviewReport()
         {
             rptViewer.ProcessingMode = Microsoft.Reporting.WinForms.ProcessingMode.Remote;
-            rptViewer.ServerReport.ReportServerUrl = new Uri(ServerPath); //new Uri(string.Format("http://{0}{1}{2}", completeURI.Host, completeURI.Segments[0], completeURI.Segments[1]));
+            rptViewer.ServerReport.ReportServerUrl = new Uri(ServerPath);
             rptViewer.ServerReport.ReportPath = ReportPath.Replace(@"\", @"/");
             rptViewer.ShowParameterPrompts = true;
             rptViewer.RefreshReport();

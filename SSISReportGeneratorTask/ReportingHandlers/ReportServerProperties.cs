@@ -6,7 +6,7 @@ using SSISReportGeneratorTask100.ReportService2005;
 
 namespace SSISReportGeneratorTask100.ReportingHandlers
 {
-    public class ReportServerProperties
+    public class ReportServerProperties : IDisposable
     {
         #region ctor
         protected ReportServerProperties() { }
@@ -358,6 +358,16 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
             }
 
             return resVal;
+        }
+
+        #endregion
+
+        #region Implementation of IDisposable
+
+        public void Dispose()
+        {
+            if (_reportsServerInstance != null)
+                _reportsServerInstance.Dispose();
         }
 
         #endregion

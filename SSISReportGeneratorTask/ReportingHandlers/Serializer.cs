@@ -11,7 +11,7 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
             if (objectToSerialize == null)
                 return string.Empty;
 
-            byte[] byteArray = null;
+            byte[] byteArray;
 
             using (var memoryStream = new MemoryStream())
             {
@@ -29,7 +29,7 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
                 return new object();
 
             byte[] bytes = Encoding.UTF8.GetBytes(xmlString);
-            object objectToDeserialize = null;
+            object objectToDeserialize;
 
             using (MemoryStream memoryStream = new MemoryStream(bytes))
             {

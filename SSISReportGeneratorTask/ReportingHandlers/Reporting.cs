@@ -27,66 +27,66 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
         public byte[] RenderReport(string url, string reportPath, ReportParameter[] parameters, string formatType, bool humanReadablePdf, IDTSComponentEvents componentEvents)
         {
             bool refire = false;
-
+            byte[] retVal;
             componentEvents.FireInformation(0, "SSISReportGeneratorTask",
                                             "Create the instance of the WS - " + string.Format("{0}ReportExecution2005.asmx", (url.Substring(url.Length - 1, 1) == "/")
                                                                                   ? url
                                                                                   : url + "/"),
                                             string.Empty, 0, ref refire);
 
-            var rs = new ReportExecutionService
-                         {
-                             Credentials = CredentialCache.DefaultCredentials,
-                             Url = string.Format("{0}ReportExecution2005.asmx", (url.Substring(url.Length - 1, 1) == "/")
-                                                                                  ? url
-                                                                                  : url + "/")
-                         };
+            using (var rs = new ReportExecutionService
+                                {
+                                    Credentials = CredentialCache.DefaultCredentials,
+                                    Url = string.Format("{0}ReportExecution2005.asmx", (url.Substring(url.Length - 1, 1) == "/") ? url : url + "/")
+                                })
+            {
+                const string historyID = null;
+                string encoding;
+                string mimeType;
+                string extension;
+                Warning[] warnings;
+                string[] streamIDs;
 
-            const string historyID = null;
-            string encoding;
-            string mimeType;
-            string extension;
-            Warning[] warnings;
-            string[] streamIDs;
-
-            var execHeader = new ExecutionHeader();
+                var execHeader = new ExecutionHeader();
 
 
-            componentEvents.FireInformation(0, "SSISReportGeneratorTask",
-                                            "Load the report from " + reportPath,
-                                            string.Empty, 0, ref refire);
+                componentEvents.FireInformation(0, "SSISReportGeneratorTask",
+                                                "Load the report from " + reportPath,
+                                                string.Empty, 0, ref refire);
 
-            var execInfo = rs.LoadReport(reportPath, historyID);
+                var execInfo = rs.LoadReport(reportPath, historyID);
 
-            componentEvents.FireInformation(0, "SSISReportGeneratorTask",
-                                            "Set parameters",
-                                            string.Empty, 0, ref refire);
+                componentEvents.FireInformation(0, "SSISReportGeneratorTask",
+                                                "Set parameters",
+                                                string.Empty, 0, ref refire);
 
-            rs.SetExecutionParameters(parameters.Select(p => new ParameterValue
-                                                        {
-                                                            Label = p.Name,
-                                                            Name = p.Name,
-                                                            Value = p.Value
-                                                        }).ToArray(),
-                                      "en-EN");
+                rs.SetExecutionParameters(parameters.Select(p => new ParameterValue
+                                                                     {
+                                                                         Label = p.Name,
+                                                                         Name = p.Name,
+                                                                         Value = p.Value
+                                                                     }).ToArray(),
+                                          "en-EN");
 
-            rs.ExecutionHeaderValue = execHeader;
-            rs.ExecutionHeaderValue.ExecutionID = execInfo.ExecutionID;
+                rs.ExecutionHeaderValue = execHeader;
+                rs.ExecutionHeaderValue.ExecutionID = execInfo.ExecutionID;
 
-            componentEvents.FireInformation(0, "SSISReportGeneratorTask",
-                                            "Render the report",
-                                            string.Empty, 0, ref refire);
+                componentEvents.FireInformation(0, "SSISReportGeneratorTask",
+                                                "Render the report",
+                                                string.Empty, 0, ref refire);
 
-            return rs.Render(formatType,
-                             (humanReadablePdf)
-                                ? DeviceSettings
-                                : null,
-                            out extension,
-                            out encoding,
-                            out mimeType,
-                            out warnings,
-                            out streamIDs);
+                retVal = rs.Render(formatType,
+                                 (humanReadablePdf)
+                                     ? DeviceSettings
+                                     : null,
+                                 out extension,
+                                 out encoding,
+                                 out mimeType,
+                                 out warnings,
+                                 out streamIDs);
+            }
 
+            return retVal;
         }
     }
 }

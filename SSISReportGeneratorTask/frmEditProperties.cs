@@ -69,6 +69,9 @@ namespace SSISReportGeneratorTask100
         public frmEditProperties(TaskHost taskHost, Connections connections)
         {
             InitializeComponent();
+
+            Closing += frmEditProperties_Closing;
+
             _isFirstLoad = true;
 
             Cursor.Current = Cursors.WaitCursor;
@@ -139,6 +142,12 @@ namespace SSISReportGeneratorTask100
             }
 
             Cursor.Current = Cursors.Default;
+        }
+
+        void frmEditProperties_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _reportServerProperties.Dispose();
+            ReportServerSource.Dispose();
         }
 
         #endregion

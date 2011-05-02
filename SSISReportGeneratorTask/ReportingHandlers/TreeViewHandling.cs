@@ -37,16 +37,16 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
         /// <summary>
         /// Fills the tree view.
         /// </summary>
-        /// <param name="Path">The path.</param>
-        /// <param name="ParentNode">The parent node.</param>
+        /// <param name="path">The path.</param>
+        /// <param name="parentNode">The parent node.</param>
         /// <param name="reportingService2005">The reporting service2005.</param>
         /// <param name="showDataSource">if set to <c>true</c> [show data source].</param>
         /// <returns></returns>
-        private static TreeNode FillTreeView(string Path, TreeNode ParentNode, ReportingService2005 reportingService2005, bool showDataSource)
+        private static TreeNode FillTreeView(string path, TreeNode parentNode, ReportingService2005 reportingService2005, bool showDataSource)
         {
             try
             {
-                CatalogItem[] catalogItems = reportingService2005.ListChildren(Path, false);
+                CatalogItem[] catalogItems = reportingService2005.ListChildren(path, false);
                 foreach (CatalogItem catalogItem in catalogItems)
                 {
                     switch (catalogItem.Type)
@@ -61,7 +61,7 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
                                                       };
 
                             folderNode.SelectedImageIndex = folderNode.ImageIndex;
-                            ParentNode.Nodes.Add(FillTreeView(catalogItem.Path, folderNode, reportingService2005, showDataSource));
+                            parentNode.Nodes.Add(FillTreeView(catalogItem.Path, folderNode, reportingService2005, showDataSource));
                             break;
                         case ItemTypeEnum.Report:
                             if (showDataSource)
@@ -75,7 +75,7 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
                                                       };
 
                             reportNode.SelectedImageIndex = reportNode.ImageIndex;
-                            ParentNode.Nodes.Add(reportNode);
+                            parentNode.Nodes.Add(reportNode);
                             break;
                         case ItemTypeEnum.DataSource:
                             if (showDataSource)
@@ -89,7 +89,7 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
                                 };
 
                                 dataSourceNode.SelectedImageIndex = dataSourceNode.ImageIndex;
-                                ParentNode.Nodes.Add(dataSourceNode);
+                                parentNode.Nodes.Add(dataSourceNode);
                             }
                             break;
                     }
@@ -100,7 +100,7 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
                 MessageBox.Show(string.Format(@"The Reports Server {0} is not available. Exception details: {1}", reportingService2005.Url, exception.Message));
             }
 
-            return ParentNode;
+            return parentNode;
         }
 
         /// <summary>
@@ -142,21 +142,21 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
         /// <summary>
         /// Checks the nodes.
         /// </summary>
-        /// <param name="Node">The node.</param>
-        public static void CheckNodes(TreeNode Node)
+        /// <param name="node">The node.</param>
+        public static void CheckNodes(TreeNode node)
         {
-            if (Node.Level == 0)
+            if (node.Level == 0)
                 return;
 
-            if (Node.Tag != null)
-                if (((ItemTypeEnum)(Node.Tag)) != ItemTypeEnum.Folder)
+            if (node.Tag != null)
+                if (((ItemTypeEnum)(node.Tag)) != ItemTypeEnum.Folder)
                     return;
 
-            List<TreeNode> listTreeNodes = GetNodes(Node.Nodes);
+            List<TreeNode> listTreeNodes = GetNodes(node.Nodes);
 
             foreach (TreeNode treeNode in listTreeNodes)
             {
-                treeNode.Checked = Node.Checked;
+                treeNode.Checked = node.Checked;
             }
         }
 
