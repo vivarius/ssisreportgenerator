@@ -306,6 +306,7 @@ namespace SSISReportGeneratorTask100
                     {
                         foreach (DataGridViewRow row in grdParameters.Rows.Cast<DataGridViewRow>().Where(row => row.Cells[0].Value.ToString() == mappingParam.Name))
                         {
+                            ((DataGridViewComboBoxCell)row.Cells[5]).Items.Add(mappingParam.Value);
                             row.Cells[5].Value = mappingParam.Value;
                         }
                     }
