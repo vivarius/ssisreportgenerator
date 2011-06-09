@@ -90,35 +90,35 @@ namespace SSISReportGeneratorTask100
             LoadConfigFileConnections();
             LoadVariablesForReportName();
 
-            if (_taskHost.Properties[NamedStringMembers.REPORTSERVER] == null)
+            if (_taskHost.Properties[Keys.REPORTSERVER] == null)
             {
                 Cursor.Current = Cursors.Default;
                 return;
             }
 
-            if (_taskHost.Properties[NamedStringMembers.REPORTSERVER].GetValue(_taskHost) != null)
+            if (_taskHost.Properties[Keys.REPORTSERVER].GetValue(_taskHost) != null)
             {
-                cmbSourceVariables.Text = _taskHost.Properties[NamedStringMembers.REPORTSERVER].GetValue(_taskHost).ToString();
+                cmbSourceVariables.Text = _taskHost.Properties[Keys.REPORTSERVER].GetValue(_taskHost).ToString();
 
-                string.Format("{0}/ReportService2005.asmx", _taskHost.Properties[NamedStringMembers.REPORTSERVER].GetValue(_taskHost));
-                string.Format("{0}/ReportExecution2005.asmx", _taskHost.Properties[NamedStringMembers.REPORTSERVER].GetValue(_taskHost));
+                string.Format("{0}/ReportService2005.asmx", _taskHost.Properties[Keys.REPORTSERVER].GetValue(_taskHost));
+                string.Format("{0}/ReportExecution2005.asmx", _taskHost.Properties[Keys.REPORTSERVER].GetValue(_taskHost));
 
                 try
                 {
                     LoadTreeViewPanelsFromSrv();
 
-                    if (_taskHost.Properties[NamedStringMembers.REPORTNAME].GetValue(_taskHost) != null)
+                    if (_taskHost.Properties[Keys.REPORTNAME].GetValue(_taskHost) != null)
                     {
-                        _reportName = _taskHost.Properties[NamedStringMembers.REPORTNAME].GetValue(_taskHost).ToString();
-                        _reportPath = _taskHost.Properties[NamedStringMembers.REPORTPATH].GetValue(_taskHost).ToString();
+                        _reportName = _taskHost.Properties[Keys.REPORTNAME].GetValue(_taskHost).ToString();
+                        _reportPath = _taskHost.Properties[Keys.REPORTPATH].GetValue(_taskHost).ToString();
 
-                        cmbFileType.Text = _taskHost.Properties[NamedStringMembers.OUTPUT_TYPE].GetValue(_taskHost).ToString();
-                        cmbConfigurationFile.Text = _taskHost.Properties[NamedStringMembers.DESTINATION_FILE].GetValue(_taskHost).ToString();
-                        cmbReportName.Text = _taskHost.Properties[NamedStringMembers.REPORTNAME_EXPRESSION].GetValue(_taskHost).ToString();
+                        cmbFileType.Text = _taskHost.Properties[Keys.OUTPUT_TYPE].GetValue(_taskHost).ToString();
+                        cmbConfigurationFile.Text = _taskHost.Properties[Keys.DESTINATION_FILE].GetValue(_taskHost).ToString();
+                        cmbReportName.Text = _taskHost.Properties[Keys.REPORTNAME_EXPRESSION].GetValue(_taskHost).ToString();
 
-                        if (_taskHost.Properties[NamedStringMembers.CONFIGURATION_TYPE].GetValue(_taskHost).ToString() == ConfigurationType.TASK_VARIABLE)
+                        if (_taskHost.Properties[Keys.CONFIGURATION_TYPE].GetValue(_taskHost).ToString() == ConfigurationType.TASK_VARIABLE)
                             optChooseVariable.Checked = true;
-                        if (_taskHost.Properties[NamedStringMembers.CONFIGURATION_TYPE].GetValue(_taskHost).ToString() == ConfigurationType.FILE_CONNECTOR)
+                        if (_taskHost.Properties[Keys.CONFIGURATION_TYPE].GetValue(_taskHost).ToString() == ConfigurationType.FILE_CONNECTOR)
                             optChooseConfigFileConnector.Checked = true;
 
                         tvReportServerSource.Scrollable = true;
@@ -128,17 +128,37 @@ namespace SSISReportGeneratorTask100
                         tvReportServerSource.SelectedNode.ForeColor = System.Drawing.Color.DarkRed;
                         tvReportServerSource.SelectedNode.EnsureVisible();
 
-                        cmbFileType.SelectedText = _taskHost.Properties[NamedStringMembers.OUTPUT_FILE].GetValue(_taskHost).ToString();
+                        if (_taskHost.Properties[Keys.OUTPUT_TYPE].GetValue(_taskHost) != null)
+                            cmbFileType.SelectedIndex = Tools.FindStringInComboBox(cmbFileType, _taskHost.Properties[Keys.OUTPUT_TYPE].GetValue(_taskHost).ToString(), -1);
 
                         _reportServerProperties = ((ReportServerProperties)(SourceNode.TreeView.Tag)).ReportsServerInstance;
 
                         tvReportServerSource.SelectedNode.EnsureVisible();
 
                         _reportPath = string.Format("{0}/{1}", _reportPath, _reportName);
+
+                        if (_taskHost.Properties[Keys.SEND_FILE_BY_EMAIL].GetValue(_taskHost) != null)
+                        {
+                            if (_taskHost.Properties[Keys.SEND_FILE_BY_EMAIL].GetValue(_taskHost).ToString() == Keys.TRUE)
+                            {
+                                chkEmail.Checked = true;
+                                EnableSmtp(chkEmail.Checked);
+                            }
+                            else
+                            {
+                                chkEmail.Checked = false;
+                                EnableSmtp(chkEmail.Checked);
+                            }
+                        }
                     }
                 }
                 catch
                 { }
+            }
+            else
+            {
+                chkEmail.Checked = false;
+                EnableSmtp(chkEmail.Checked);
             }
 
             Cursor.Current = Cursors.Default;
@@ -153,6 +173,7 @@ namespace SSISReportGeneratorTask100
         #endregion
 
         #region Methods
+
 
         /// <summary>
         /// Loads the tree view panels from SQL Report Server.
@@ -174,6 +195,11 @@ namespace SSISReportGeneratorTask100
             {
                 MessageBox.Show(exception.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void EnableSmtp(bool enable)
+        {
+            btEmail.Enabled = enable;
         }
 
         /// <summary>
@@ -300,7 +326,7 @@ namespace SSISReportGeneratorTask100
 
                 if (_isFirstLoad)
                 {
-                    var mappingParams = (MappingParams)_taskHost.Properties[NamedStringMembers.MAPPING_PARAMS].GetValue(_taskHost);
+                    var mappingParams = (MappingParams)_taskHost.Properties[Keys.MAPPING_PARAMS].GetValue(_taskHost);
 
                     foreach (MappingParam mappingParam in mappingParams)
                     {
@@ -466,11 +492,13 @@ namespace SSISReportGeneratorTask100
         private void LoadConfigFileConnections()
         {
             cmbConfigurationFile.Items.Clear();
-            foreach (ConnectionManager connection in Connections)
+            foreach (ConnectionManager connection in Connections.Cast<ConnectionManager>().Where(connection => connection.CreationName.Contains("FILE")))
             {
                 cmbConfigurationFile.Items.Add(connection.Name);
             }
         }
+
+
 
         /// <summary>
         /// This method evaluate expressions like @([System::TaskName] + [System::TaskID]) or any other operation created using
@@ -556,15 +584,22 @@ namespace SSISReportGeneratorTask100
             }
 
             //Save the values
-            _taskHost.Properties[NamedStringMembers.REPORTSERVER].SetValue(_taskHost, cmbSourceVariables.Text);
-            _taskHost.Properties[NamedStringMembers.REPORTNAME].SetValue(_taskHost, tvReportServerSource.SelectedNode.Text);
-            _taskHost.Properties[NamedStringMembers.REPORTNAME_EXPRESSION].SetValue(_taskHost, cmbReportName.Text);
-            _taskHost.Properties[NamedStringMembers.REPORTPATH].SetValue(_taskHost, tvReportServerSource.SelectedNode.Parent.FullPath.Replace(tvReportServerSource.Nodes[0].Text, string.Empty).Replace(@"\", "/"));
-            _taskHost.Properties[NamedStringMembers.OUTPUT_TYPE].SetValue(_taskHost, cmbFileType.SelectedItem);
-            _taskHost.Properties[NamedStringMembers.DESTINATION_FILE].SetValue(_taskHost, cmbConfigurationFile.Text);
-            _taskHost.Properties[NamedStringMembers.CONFIGURATION_TYPE].SetValue(_taskHost, optChooseVariable.Checked
+            _taskHost.Properties[Keys.REPORTSERVER].SetValue(_taskHost, cmbSourceVariables.Text);
+            _taskHost.Properties[Keys.REPORTNAME].SetValue(_taskHost, tvReportServerSource.SelectedNode.Text);
+            _taskHost.Properties[Keys.REPORTNAME_EXPRESSION].SetValue(_taskHost, cmbReportName.Text);
+            _taskHost.Properties[Keys.REPORTPATH].SetValue(_taskHost, tvReportServerSource.SelectedNode.Parent.FullPath.Replace(tvReportServerSource.Nodes[0].Text, string.Empty).Replace(@"\", "/"));
+            _taskHost.Properties[Keys.OUTPUT_TYPE].SetValue(_taskHost, cmbFileType.SelectedItem);
+            _taskHost.Properties[Keys.DESTINATION_FILE].SetValue(_taskHost, cmbConfigurationFile.Text);
+            _taskHost.Properties[Keys.CONFIGURATION_TYPE].SetValue(_taskHost, optChooseVariable.Checked
                                                                                                 ? ConfigurationType.TASK_VARIABLE
                                                                                                 : ConfigurationType.FILE_CONNECTOR);
+
+
+            _taskHost.Properties[Keys.SEND_FILE_BY_EMAIL].SetValue(_taskHost, chkEmail.Checked
+                                                                                    ? Keys.TRUE
+                                                                                    : Keys.FALSE);
+
+
 
             var mappingParams = new MappingParams();
             mappingParams.AddRange(from DataGridViewRow row in grdParameters.Rows
@@ -575,7 +610,7 @@ namespace SSISReportGeneratorTask100
                                                   Value = row.Cells[5].Value.ToString()
                                               });
 
-            _taskHost.Properties[NamedStringMembers.MAPPING_PARAMS].SetValue(_taskHost, mappingParams);
+            _taskHost.Properties[Keys.MAPPING_PARAMS].SetValue(_taskHost, mappingParams);
             Close();
         }
 
@@ -677,11 +712,23 @@ namespace SSISReportGeneratorTask100
             }
         }
 
-        private void label12_Click(object sender, EventArgs e)
+        private void chkEmail_Click(object sender, EventArgs e)
         {
-
+            EnableSmtp(chkEmail.Checked);
         }
 
+        private void btEmail_Click(object sender, EventArgs e)
+        {
+            using (var frmEmail = new frmEmail(_taskHost, _connections))
+            {
+                frmEmail.ShowDialog();
+            }
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(linkLabel1.Text);
+        }
         #endregion
     }
 }

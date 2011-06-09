@@ -16,7 +16,7 @@ namespace SSISReportGeneratorTask100.SSIS
         DisplayName = "SSRS Report Generator Task",
         UITypeName = "SSISReportGeneratorTask100.SSISReportGeneratorTaskUIInterface" +
         ",SSISReportGeneratorTask100," +
-        "Version=1.3.0.0," +
+        "Version=1.3.0.11," +
         "Culture=Neutral," +
         "PublicKeyToken=baf53b3fe9523f48",
         TaskContact = "cosmin.vlasiu@gmail.com",
@@ -49,6 +49,18 @@ namespace SSISReportGeneratorTask100.SSIS
         public string FileSourceType { get; set; }
         [Category("Report Generator"), Description("DestinationFile")]
         public string DestinationFile { get; set; }
+        [Category("Report Generator"), Description("SendFileByEmail")]
+        public string SendFileByEmail { get; set; }
+        [Category("Report Generator"), Description("SmtpServer")]
+        public string SmtpServer { get; set; }
+        [Category("Report Generator"), Description("SmtpRecipients")]
+        public string SmtpRecipients { get; set; }
+        [Category("Report Generator"), Description("From")]
+        public string SmtpFrom { get; set; }
+        [Category("Report Generator"), Description("EmailSubject")]
+        public string EmailSubject { get; set; }
+        [Category("Report Generator"), Description("EmailBody")]
+        public string EmailBody { get; set; }
         #endregion
 
         #region Private Properties
@@ -110,6 +122,10 @@ namespace SSISReportGeneratorTask100.SSIS
                 isBaseValid = false;
             }
 
+            if (SendFileByEmail == Keys.TRUE)
+            {
+
+            }
 
             return isBaseValid ? DTSExecResult.Success : DTSExecResult.Failure;
         }
@@ -141,7 +157,7 @@ namespace SSISReportGeneratorTask100.SSIS
 
                 if (!string.IsNullOrEmpty(ReportNameFromExpression))
                 {
-                    reportName = EvaluateExpression(ReportNameFromExpression, variableDispenser).ToString();
+                    reportName = Tools.EvaluateExpression(ReportNameFromExpression, variableDispenser).ToString();
                 }
 
 
@@ -157,25 +173,25 @@ namespace SSISReportGeneratorTask100.SSIS
                     reportParameters[paramCounter++] = new ReportParameter
                                                            {
                                                                Name = mappingParams.Name,
-                                                               Value = EvaluateExpression(mappingParams.Value, variableDispenser).ToString()
+                                                               Value = Tools.EvaluateExpression(mappingParams.Value, variableDispenser).ToString()
                                                            };
 
                     componentEvents.FireInformation(0, "SSISReportGeneratorTask",
                                                         string.Format("Param. {0} - {1} with value: {2}",
                                                                       mappingParams.Name,
                                                                       mappingParams.Value,
-                                                                      EvaluateExpression(mappingParams.Value, variableDispenser)),
+                                                                      Tools.EvaluateExpression(mappingParams.Value, variableDispenser)),
                                                         string.Empty, 0, ref refire);
                 }
 
                 componentEvents.FireInformation(0, "SSISReportGeneratorTask",
                                                     string.Format("Start to render the report for {0}{1} OutPutType is {2}",
-                                                                  EvaluateExpression(ReportServer, variableDispenser),
+                                                                  Tools.EvaluateExpression(ReportServer, variableDispenser),
                                                                   ReportPath + "/" + reportName,
                                                                   OutPutType),
                                                     string.Empty, 0, ref refire);
 
-                byte[] reportSource = reportTools.RenderReport(EvaluateExpression(ReportServer, variableDispenser).ToString(),
+                byte[] reportSource = reportTools.RenderReport(Tools.EvaluateExpression(ReportServer, variableDispenser).ToString(),
                                                                ReportPath + "/" + reportName,
                                                                reportParameters,
                                                                OutPutType,
@@ -184,8 +200,7 @@ namespace SSISReportGeneratorTask100.SSIS
                 var targetFile = GetTargetFile(variableDispenser, connections);
 
                 componentEvents.FireInformation(0, "SSISReportGeneratorTask",
-                                                string.Format("Copy the result to {0}",
-                                                              targetFile),
+                                                string.Format("Copy the result to {0}", targetFile),
                                                 string.Empty, 0, ref refire);
 
                 if (File.Exists(targetFile))
@@ -194,9 +209,25 @@ namespace SSISReportGeneratorTask100.SSIS
                 File.WriteAllBytes(targetFile, reportSource);
 
                 componentEvents.FireInformation(0, "SSISReportGeneratorTask",
-                                                string.Format("The file was generated successfully to {0}",
-                                                              targetFile),
+                                string.Format("The file was generated successfully to {0}",
+                                              targetFile),
+                                string.Empty, 0, ref refire);
+
+                if (SendFileByEmail == Keys.TRUE)
+                {
+                    componentEvents.FireInformation(0, "SSISReportGeneratorTask",
+                                                string.Format("Preparing to send the file by email from -{0}- to -{1}-", SmtpFrom, SmtpRecipients),
                                                 string.Empty, 0, ref refire);
+                    Tools.SendEmail(variableDispenser,
+                                    connections,
+                                    componentEvents,
+                                    targetFile,
+                                    SmtpFrom,
+                                    SmtpRecipients,
+                                    EmailSubject,
+                                    EmailBody,
+                                    SmtpServer);
+                }
 
             }
             catch (Exception ex)
@@ -224,28 +255,10 @@ namespace SSISReportGeneratorTask100.SSIS
         {
             return FileSourceType == ConfigurationType.FILE_CONNECTOR
                         ? connections[DestinationFile].ConnectionString
-                        : EvaluateExpression(DestinationFile, variableDispenser).ToString();
+                        : Tools.EvaluateExpression(DestinationFile, variableDispenser).ToString();
         }
 
-        /// <summary>
-        /// This method evaluate expressions like @([System::TaskName] + [System::TaskID]) or any other operation created using 
-        /// ExpressionBuilder
-        /// </summary>
-        /// <param name="mappedParam"></param>
-        /// <param name="variableDispenser"></param>
-        /// <returns></returns>
-        private static object EvaluateExpression(string mappedParam, VariableDispenser variableDispenser)
-        {
-            object variableObject = null;
 
-            var expressionEvaluatorClass = new ExpressionEvaluatorClass
-            {
-                Expression = mappedParam
-            };
-
-            expressionEvaluatorClass.Evaluate(DtsConvert.GetExtendedInterface(variableDispenser), out variableObject, false);
-            return variableObject;
-        }
 
         /// <summary>
         /// Gets the needed variables.
@@ -428,29 +441,47 @@ namespace SSISReportGeneratorTask100.SSIS
         {
             XmlElement taskElement = doc.CreateElement(string.Empty, "SSISReportGeneratorTask", string.Empty);
 
-            XmlAttribute reportServer = doc.CreateAttribute(string.Empty, NamedStringMembers.REPORTSERVER, string.Empty);
+            XmlAttribute reportServer = doc.CreateAttribute(string.Empty, Keys.REPORTSERVER, string.Empty);
             reportServer.Value = ReportServer;
 
-            XmlAttribute reportPath = doc.CreateAttribute(string.Empty, NamedStringMembers.REPORTPATH, string.Empty);
+            XmlAttribute reportPath = doc.CreateAttribute(string.Empty, Keys.REPORTPATH, string.Empty);
             reportPath.Value = ReportPath;
 
-            XmlAttribute reportName = doc.CreateAttribute(string.Empty, NamedStringMembers.REPORTNAME, string.Empty);
+            XmlAttribute reportName = doc.CreateAttribute(string.Empty, Keys.REPORTNAME, string.Empty);
             reportName.Value = ReportName;
 
-            XmlAttribute reportNameFromExpression = doc.CreateAttribute(string.Empty, NamedStringMembers.REPORTNAME_EXPRESSION, string.Empty);
+            XmlAttribute reportNameFromExpression = doc.CreateAttribute(string.Empty, Keys.REPORTNAME_EXPRESSION, string.Empty);
             reportNameFromExpression.Value = ReportNameFromExpression;
 
-            XmlAttribute mappingParams = doc.CreateAttribute(string.Empty, NamedStringMembers.MAPPING_PARAMS, string.Empty);
+            XmlAttribute mappingParams = doc.CreateAttribute(string.Empty, Keys.MAPPING_PARAMS, string.Empty);
             mappingParams.Value = Serializer.SerializeToXmlString(MappingParams);
 
-            XmlAttribute outPutType = doc.CreateAttribute(string.Empty, NamedStringMembers.OUTPUT_TYPE, string.Empty);
+            XmlAttribute outPutType = doc.CreateAttribute(string.Empty, Keys.OUTPUT_TYPE, string.Empty);
             outPutType.Value = OutPutType;
 
-            XmlAttribute fileSourceType = doc.CreateAttribute(string.Empty, NamedStringMembers.CONFIGURATION_TYPE, string.Empty);
+            XmlAttribute fileSourceType = doc.CreateAttribute(string.Empty, Keys.CONFIGURATION_TYPE, string.Empty);
             fileSourceType.Value = FileSourceType;
 
-            XmlAttribute destinationFile = doc.CreateAttribute(string.Empty, NamedStringMembers.DESTINATION_FILE, string.Empty);
+            XmlAttribute destinationFile = doc.CreateAttribute(string.Empty, Keys.DESTINATION_FILE, string.Empty);
             destinationFile.Value = DestinationFile;
+
+            XmlAttribute sendFileByEmail = doc.CreateAttribute(string.Empty, Keys.SEND_FILE_BY_EMAIL, string.Empty);
+            sendFileByEmail.Value = SendFileByEmail;
+
+            XmlAttribute serverSMTP = doc.CreateAttribute(string.Empty, Keys.SMTP_SERVER, string.Empty);
+            serverSMTP.Value = SmtpServer;
+
+            XmlAttribute recipients = doc.CreateAttribute(string.Empty, Keys.RECIPIENTS, string.Empty);
+            recipients.Value = SmtpRecipients;
+
+            XmlAttribute smtpFrom = doc.CreateAttribute(string.Empty, Keys.FROM, string.Empty);
+            smtpFrom.Value = SmtpFrom;
+
+            XmlAttribute emailSubject = doc.CreateAttribute(string.Empty, Keys.EMAIL_SUBJECT, string.Empty);
+            emailSubject.Value = EmailSubject;
+
+            XmlAttribute emailBody = doc.CreateAttribute(string.Empty, Keys.EMAIL_BODY, string.Empty);
+            emailBody.Value = EmailBody;
 
             taskElement.Attributes.Append(reportServer);
             taskElement.Attributes.Append(reportPath);
@@ -460,6 +491,13 @@ namespace SSISReportGeneratorTask100.SSIS
             taskElement.Attributes.Append(outPutType);
             taskElement.Attributes.Append(fileSourceType);
             taskElement.Attributes.Append(destinationFile);
+
+            taskElement.Attributes.Append(sendFileByEmail);
+            taskElement.Attributes.Append(serverSMTP);
+            taskElement.Attributes.Append(recipients);
+            taskElement.Attributes.Append(smtpFrom);
+            taskElement.Attributes.Append(emailSubject);
+            taskElement.Attributes.Append(emailBody);
 
             doc.AppendChild(taskElement);
         }
@@ -478,14 +516,22 @@ namespace SSISReportGeneratorTask100.SSIS
 
             try
             {
-                ReportServer = node.Attributes.GetNamedItem(NamedStringMembers.REPORTSERVER).Value;
-                ReportPath = node.Attributes.GetNamedItem(NamedStringMembers.REPORTPATH).Value;
-                ReportName = node.Attributes.GetNamedItem(NamedStringMembers.REPORTNAME).Value;
-                ReportNameFromExpression = node.Attributes.GetNamedItem(NamedStringMembers.REPORTNAME_EXPRESSION).Value;
-                MappingParams = Serializer.DeSerializeFromXmlString(typeof(MappingParams), node.Attributes.GetNamedItem(NamedStringMembers.MAPPING_PARAMS).Value);
-                OutPutType = node.Attributes.GetNamedItem(NamedStringMembers.OUTPUT_TYPE).Value;
-                FileSourceType = node.Attributes.GetNamedItem(NamedStringMembers.CONFIGURATION_TYPE).Value;
-                DestinationFile = node.Attributes.GetNamedItem(NamedStringMembers.DESTINATION_FILE).Value;
+                ReportServer = node.Attributes.GetNamedItem(Keys.REPORTSERVER).Value;
+                ReportPath = node.Attributes.GetNamedItem(Keys.REPORTPATH).Value;
+                ReportName = node.Attributes.GetNamedItem(Keys.REPORTNAME).Value;
+                ReportNameFromExpression = node.Attributes.GetNamedItem(Keys.REPORTNAME_EXPRESSION).Value;
+                MappingParams = Serializer.DeSerializeFromXmlString(typeof(MappingParams), node.Attributes.GetNamedItem(Keys.MAPPING_PARAMS).Value);
+                OutPutType = node.Attributes.GetNamedItem(Keys.OUTPUT_TYPE).Value;
+                FileSourceType = node.Attributes.GetNamedItem(Keys.CONFIGURATION_TYPE).Value;
+                DestinationFile = node.Attributes.GetNamedItem(Keys.DESTINATION_FILE).Value;
+
+                SendFileByEmail = node.Attributes.GetNamedItem(Keys.SEND_FILE_BY_EMAIL).Value;
+                SmtpServer = node.Attributes.GetNamedItem(Keys.SMTP_SERVER).Value;
+                SmtpRecipients = node.Attributes.GetNamedItem(Keys.RECIPIENTS).Value;
+
+                SmtpFrom = node.Attributes.GetNamedItem(Keys.FROM).Value;
+                EmailSubject = node.Attributes.GetNamedItem(Keys.EMAIL_SUBJECT).Value;
+                EmailBody = node.Attributes.GetNamedItem(Keys.EMAIL_BODY).Value;
             }
             catch (Exception exception)
             {

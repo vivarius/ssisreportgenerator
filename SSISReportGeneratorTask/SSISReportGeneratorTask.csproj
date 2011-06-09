@@ -67,13 +67,19 @@
     <Compile Include="frmEditProperties.Designer.cs">
       <DependentUpon>frmEditProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmEmail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmEmail.Designer.cs">
+      <DependentUpon>frmEmail.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmPreviewReport.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmPreviewReport.Designer.cs">
       <DependentUpon>frmPreviewReport.cs</DependentUpon>
     </Compile>
-    <Compile Include="NamedItems.cs" />
+    <Compile Include="Goodies.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -226,6 +232,9 @@
   <ItemGroup>
     <EmbeddedResource Include="frmEditProperties.resx">
       <DependentUpon>frmEditProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmEmail.resx">
+      <DependentUpon>frmEmail.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPreviewReport.resx">
       <DependentUpon>frmPreviewReport.cs</DependentUpon>

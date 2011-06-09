@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmEditProperties));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btOk = new System.Windows.Forms.Button();
             this.btCancel = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -43,6 +43,9 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btEmail = new System.Windows.Forms.Button();
+            this.chkEmail = new System.Windows.Forms.CheckBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.lbRenderedReportName = new System.Windows.Forms.Label();
             this.lbSelectedReportName = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
@@ -100,7 +103,7 @@
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.label12 = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -263,6 +266,9 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btEmail);
+            this.groupBox1.Controls.Add(this.chkEmail);
+            this.groupBox1.Controls.Add(this.groupBox2);
             this.groupBox1.Controls.Add(this.lbRenderedReportName);
             this.groupBox1.Controls.Add(this.lbSelectedReportName);
             this.groupBox1.Controls.Add(this.label11);
@@ -276,12 +282,41 @@
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.cmbFileType);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(9, 257);
+            this.groupBox1.Location = new System.Drawing.Point(9, 213);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(479, 185);
+            this.groupBox1.Size = new System.Drawing.Size(479, 238);
             this.groupBox1.TabIndex = 79;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Actions";
+            // 
+            // btEmail
+            // 
+            this.btEmail.Location = new System.Drawing.Point(303, 103);
+            this.btEmail.Name = "btEmail";
+            this.btEmail.Size = new System.Drawing.Size(104, 23);
+            this.btEmail.TabIndex = 56;
+            this.btEmail.Text = "E - mail details";
+            this.btEmail.UseVisualStyleBackColor = true;
+            this.btEmail.Click += new System.EventHandler(this.btEmail_Click);
+            // 
+            // chkEmail
+            // 
+            this.chkEmail.AutoSize = true;
+            this.chkEmail.Location = new System.Drawing.Point(92, 107);
+            this.chkEmail.Name = "chkEmail";
+            this.chkEmail.Size = new System.Drawing.Size(127, 17);
+            this.chkEmail.TabIndex = 53;
+            this.chkEmail.Text = "Send the file by Email";
+            this.chkEmail.UseVisualStyleBackColor = true;
+            this.chkEmail.Click += new System.EventHandler(this.chkEmail_Click);
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Location = new System.Drawing.Point(38, 142);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(403, 10);
+            this.groupBox2.TabIndex = 52;
+            this.groupBox2.TabStop = false;
             // 
             // lbRenderedReportName
             // 
@@ -296,7 +331,7 @@
             this.lbSelectedReportName.AutoSize = true;
             this.lbSelectedReportName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lbSelectedReportName.ForeColor = System.Drawing.Color.Maroon;
-            this.lbSelectedReportName.Location = new System.Drawing.Point(92, 155);
+            this.lbSelectedReportName.Location = new System.Drawing.Point(92, 202);
             this.lbSelectedReportName.Name = "lbSelectedReportName";
             this.lbSelectedReportName.Size = new System.Drawing.Size(0, 13);
             this.lbSelectedReportName.TabIndex = 50;
@@ -304,7 +339,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(4, 155);
+            this.label11.Location = new System.Drawing.Point(4, 202);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(82, 13);
             this.label11.TabIndex = 49;
@@ -313,14 +348,14 @@
             // cmbReportName
             // 
             this.cmbReportName.FormattingEnabled = true;
-            this.cmbReportName.Location = new System.Drawing.Point(92, 127);
+            this.cmbReportName.Location = new System.Drawing.Point(92, 174);
             this.cmbReportName.Name = "cmbReportName";
             this.cmbReportName.Size = new System.Drawing.Size(315, 21);
             this.cmbReportName.TabIndex = 48;
             // 
             // btReportName
             // 
-            this.btReportName.Location = new System.Drawing.Point(413, 126);
+            this.btReportName.Location = new System.Drawing.Point(413, 173);
             this.btReportName.Name = "btReportName";
             this.btReportName.Size = new System.Drawing.Size(45, 23);
             this.btReportName.TabIndex = 47;
@@ -331,7 +366,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(15, 130);
+            this.label4.Location = new System.Drawing.Point(6, 177);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(71, 13);
             this.label4.TabIndex = 45;
@@ -340,7 +375,7 @@
             // cmbConfigurationFile
             // 
             this.cmbConfigurationFile.FormattingEnabled = true;
-            this.cmbConfigurationFile.Location = new System.Drawing.Point(92, 58);
+            this.cmbConfigurationFile.Location = new System.Drawing.Point(92, 49);
             this.cmbConfigurationFile.Name = "cmbConfigurationFile";
             this.cmbConfigurationFile.Size = new System.Drawing.Size(315, 21);
             this.cmbConfigurationFile.TabIndex = 44;
@@ -348,7 +383,7 @@
             // optChooseVariable
             // 
             this.optChooseVariable.AutoSize = true;
-            this.optChooseVariable.Location = new System.Drawing.Point(288, 84);
+            this.optChooseVariable.Location = new System.Drawing.Point(234, 76);
             this.optChooseVariable.Name = "optChooseVariable";
             this.optChooseVariable.Size = new System.Drawing.Size(173, 17);
             this.optChooseVariable.TabIndex = 43;
@@ -360,7 +395,7 @@
             // 
             this.optChooseConfigFileConnector.AutoSize = true;
             this.optChooseConfigFileConnector.Checked = true;
-            this.optChooseConfigFileConnector.Location = new System.Drawing.Point(139, 85);
+            this.optChooseConfigFileConnector.Location = new System.Drawing.Point(92, 76);
             this.optChooseConfigFileConnector.Name = "optChooseConfigFileConnector";
             this.optChooseConfigFileConnector.Size = new System.Drawing.Size(140, 17);
             this.optChooseConfigFileConnector.TabIndex = 42;
@@ -372,7 +407,7 @@
             // btConfigFileExpression
             // 
             this.btConfigFileExpression.Enabled = false;
-            this.btConfigFileExpression.Location = new System.Drawing.Point(413, 56);
+            this.btConfigFileExpression.Location = new System.Drawing.Point(413, 47);
             this.btConfigFileExpression.Name = "btConfigFileExpression";
             this.btConfigFileExpression.Size = new System.Drawing.Size(45, 23);
             this.btConfigFileExpression.TabIndex = 41;
@@ -383,11 +418,11 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(23, 61);
+            this.label2.Location = new System.Drawing.Point(6, 52);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(63, 13);
+            this.label2.Size = new System.Drawing.Size(32, 13);
             this.label2.TabIndex = 2;
-            this.label2.Text = "At this path:";
+            this.label2.Text = "Path:";
             // 
             // cmbFileType
             // 
@@ -402,7 +437,7 @@
             "MHTML",
             "XML",
             "IMAGE"});
-            this.cmbFileType.Location = new System.Drawing.Point(92, 29);
+            this.cmbFileType.Location = new System.Drawing.Point(92, 20);
             this.cmbFileType.Name = "cmbFileType";
             this.cmbFileType.Size = new System.Drawing.Size(120, 21);
             this.cmbFileType.TabIndex = 1;
@@ -410,7 +445,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(32, 32);
+            this.label1.Location = new System.Drawing.Point(4, 23);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(54, 13);
             this.label1.TabIndex = 0;
@@ -419,7 +454,7 @@
             // btPreview
             // 
             this.btPreview.Enabled = false;
-            this.btPreview.Location = new System.Drawing.Point(378, 448);
+            this.btPreview.Location = new System.Drawing.Point(378, 457);
             this.btPreview.Name = "btPreview";
             this.btPreview.Size = new System.Drawing.Size(110, 26);
             this.btPreview.TabIndex = 78;
@@ -492,7 +527,7 @@
             this.txtDescription.Multiline = true;
             this.txtDescription.Name = "txtDescription";
             this.txtDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtDescription.Size = new System.Drawing.Size(387, 105);
+            this.txtDescription.Size = new System.Drawing.Size(387, 61);
             this.txtDescription.TabIndex = 70;
             // 
             // Label10
@@ -631,9 +666,9 @@
             // 
             // grdColExpression
             // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(2);
-            this.grdColExpression.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.Padding = new System.Windows.Forms.Padding(2);
+            this.grdColExpression.DefaultCellStyle = dataGridViewCellStyle5;
             this.grdColExpression.HeaderText = "f(x)";
             this.grdColExpression.Name = "grdColExpression";
             this.grdColExpression.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -803,16 +838,16 @@
             this.columnHeader3.Text = "Snapshot ID";
             this.columnHeader3.Width = 140;
             // 
-            // label12
+            // linkLabel1
             // 
-            this.label12.AutoSize = true;
-            this.label12.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.label12.Location = new System.Drawing.Point(1, 524);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(196, 13);
-            this.label12.TabIndex = 3;
-            this.label12.Text = "http://ssisreportgenerator.codeplex.com";
-            this.label12.Click += new System.EventHandler(this.label12_Click);
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(1, 528);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(196, 13);
+            this.linkLabel1.TabIndex = 3;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "http://ssisreportgenerator.codeplex.com";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
             // frmEditProperties
             // 
@@ -821,7 +856,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btCancel;
             this.ClientSize = new System.Drawing.Size(763, 546);
-            this.Controls.Add(this.label12);
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.btCancel);
             this.Controls.Add(this.btOk);
@@ -846,6 +881,7 @@
             this.tabPage5.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion
@@ -919,7 +955,10 @@
         private System.Windows.Forms.Label lbSelectedReportName;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label lbRenderedReportName;
-        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.CheckBox chkEmail;
+        private System.Windows.Forms.Button btEmail;
+        private System.Windows.Forms.LinkLabel linkLabel1;
 
     }
 }
