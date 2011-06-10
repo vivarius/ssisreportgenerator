@@ -176,6 +176,17 @@ namespace SSISReportGeneratorTask100
 
 
         /// <summary>
+        /// Loads the variables.
+        /// </summary>
+        /// <param name="parameterInfo">The parameter info.</param>
+        /// <returns></returns>
+        private List<string> LoadVariables(string parameterInfo)
+        {
+            return Variables.Cast<Variable>().Where(variable => Type.GetTypeCode(Type.GetType(parameterInfo)) == variable.DataType)
+                                             .Select(variable => string.Format("@[{0}::{1}]", variable.Namespace, variable.Name)).ToList();
+        }
+
+        /// <summary>
         /// Loads the tree view panels from SQL Report Server.
         /// </summary>
         private void LoadTreeViewPanelsFromSrv()
@@ -450,18 +461,7 @@ namespace SSISReportGeneratorTask100
             return returnValue;
         }
 
-        /// <summary>
-        /// Loads the variables.
-        /// </summary>
-        /// <param name="parameterInfo">The parameter info.</param>
-        /// <returns></returns>
-        private List<string> LoadVariables(string parameterInfo)
-        {
-            return
-                Variables.Cast<Variable>().Where(
-                    variable => Type.GetTypeCode(Type.GetType(parameterInfo)) == variable.DataType).Select(
-                        variable => string.Format("@[{0}::{1}]", variable.Namespace, variable.Name)).ToList();
-        }
+
 
         /// <summary>
         /// Loads the combo cell variables.

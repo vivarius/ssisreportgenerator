@@ -29,10 +29,6 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.txFrom = new System.Windows.Forms.TextBox();
-            this.btFrom = new System.Windows.Forms.Button();
-            this.btTo = new System.Windows.Forms.Button();
-            this.txTo = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.btSubject = new System.Windows.Forms.Button();
             this.txSubject = new System.Windows.Forms.TextBox();
@@ -44,6 +40,8 @@
             this.btCancel = new System.Windows.Forms.Button();
             this.cmbSMTPSrv = new System.Windows.Forms.ComboBox();
             this.label13 = new System.Windows.Forms.Label();
+            this.cmbFrom = new System.Windows.Forms.ComboBox();
+            this.cmbTo = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // label1
@@ -54,40 +52,6 @@
             this.label1.Size = new System.Drawing.Size(33, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "From:";
-            // 
-            // txFrom
-            // 
-            this.txFrom.Location = new System.Drawing.Point(91, 32);
-            this.txFrom.Name = "txFrom";
-            this.txFrom.Size = new System.Drawing.Size(345, 20);
-            this.txFrom.TabIndex = 1;
-            // 
-            // btFrom
-            // 
-            this.btFrom.Location = new System.Drawing.Point(442, 29);
-            this.btFrom.Name = "btFrom";
-            this.btFrom.Size = new System.Drawing.Size(47, 23);
-            this.btFrom.TabIndex = 2;
-            this.btFrom.Text = "f(x)";
-            this.btFrom.UseVisualStyleBackColor = true;
-            this.btFrom.Click += new System.EventHandler(this.btFrom_Click);
-            // 
-            // btTo
-            // 
-            this.btTo.Location = new System.Drawing.Point(442, 55);
-            this.btTo.Name = "btTo";
-            this.btTo.Size = new System.Drawing.Size(47, 23);
-            this.btTo.TabIndex = 5;
-            this.btTo.Text = "f(x)";
-            this.btTo.UseVisualStyleBackColor = true;
-            this.btTo.Click += new System.EventHandler(this.btTo_Click);
-            // 
-            // txTo
-            // 
-            this.txTo.Location = new System.Drawing.Point(91, 58);
-            this.txTo.Name = "txTo";
-            this.txTo.Size = new System.Drawing.Size(345, 20);
-            this.txTo.TabIndex = 4;
             // 
             // label2
             // 
@@ -100,7 +64,7 @@
             // 
             // btSubject
             // 
-            this.btSubject.Location = new System.Drawing.Point(442, 81);
+            this.btSubject.Location = new System.Drawing.Point(389, 82);
             this.btSubject.Name = "btSubject";
             this.btSubject.Size = new System.Drawing.Size(47, 23);
             this.btSubject.TabIndex = 8;
@@ -112,7 +76,7 @@
             // 
             this.txSubject.Location = new System.Drawing.Point(91, 84);
             this.txSubject.Name = "txSubject";
-            this.txSubject.Size = new System.Drawing.Size(345, 20);
+            this.txSubject.Size = new System.Drawing.Size(292, 20);
             this.txSubject.TabIndex = 7;
             // 
             // label3
@@ -135,7 +99,7 @@
             // 
             // btBody
             // 
-            this.btBody.Location = new System.Drawing.Point(442, 110);
+            this.btBody.Location = new System.Drawing.Point(389, 111);
             this.btBody.Name = "btBody";
             this.btBody.Size = new System.Drawing.Size(47, 23);
             this.btBody.TabIndex = 11;
@@ -148,12 +112,12 @@
             this.txBody.Location = new System.Drawing.Point(91, 112);
             this.txBody.Multiline = true;
             this.txBody.Name = "txBody";
-            this.txBody.Size = new System.Drawing.Size(345, 154);
+            this.txBody.Size = new System.Drawing.Size(292, 154);
             this.txBody.TabIndex = 12;
             // 
             // btOk
             // 
-            this.btOk.Location = new System.Drawing.Point(280, 272);
+            this.btOk.Location = new System.Drawing.Point(227, 272);
             this.btOk.Name = "btOk";
             this.btOk.Size = new System.Drawing.Size(75, 23);
             this.btOk.TabIndex = 14;
@@ -164,7 +128,7 @@
             // btCancel
             // 
             this.btCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btCancel.Location = new System.Drawing.Point(361, 272);
+            this.btCancel.Location = new System.Drawing.Point(308, 272);
             this.btCancel.Name = "btCancel";
             this.btCancel.Size = new System.Drawing.Size(75, 23);
             this.btCancel.TabIndex = 13;
@@ -189,14 +153,32 @@
             this.label13.TabIndex = 56;
             this.label13.Text = "SMTP Server:";
             // 
+            // cmbFrom
+            // 
+            this.cmbFrom.FormattingEnabled = true;
+            this.cmbFrom.Location = new System.Drawing.Point(91, 32);
+            this.cmbFrom.Name = "cmbFrom";
+            this.cmbFrom.Size = new System.Drawing.Size(345, 21);
+            this.cmbFrom.TabIndex = 62;
+            // 
+            // cmbTo
+            // 
+            this.cmbTo.FormattingEnabled = true;
+            this.cmbTo.Location = new System.Drawing.Point(91, 58);
+            this.cmbTo.Name = "cmbTo";
+            this.cmbTo.Size = new System.Drawing.Size(345, 21);
+            this.cmbTo.TabIndex = 63;
+            // 
             // frmEmail
             // 
             this.AcceptButton = this.btOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btCancel;
-            this.ClientSize = new System.Drawing.Size(519, 307);
+            this.ClientSize = new System.Drawing.Size(453, 308);
             this.ControlBox = false;
+            this.Controls.Add(this.cmbTo);
+            this.Controls.Add(this.cmbFrom);
             this.Controls.Add(this.cmbSMTPSrv);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.btOk);
@@ -207,11 +189,7 @@
             this.Controls.Add(this.btSubject);
             this.Controls.Add(this.txSubject);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.btTo);
-            this.Controls.Add(this.txTo);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.btFrom);
-            this.Controls.Add(this.txFrom);
             this.Controls.Add(this.label1);
             this.Name = "frmEmail";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -224,10 +202,6 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txFrom;
-        private System.Windows.Forms.Button btFrom;
-        private System.Windows.Forms.Button btTo;
-        private System.Windows.Forms.TextBox txTo;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btSubject;
         private System.Windows.Forms.TextBox txSubject;
@@ -239,5 +213,7 @@
         private System.Windows.Forms.Button btCancel;
         private System.Windows.Forms.ComboBox cmbSMTPSrv;
         private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.ComboBox cmbFrom;
+        private System.Windows.Forms.ComboBox cmbTo;
     }
 }

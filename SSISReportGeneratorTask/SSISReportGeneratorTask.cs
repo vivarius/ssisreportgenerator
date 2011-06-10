@@ -16,7 +16,7 @@ namespace SSISReportGeneratorTask100.SSIS
         DisplayName = "SSRS Report Generator Task",
         UITypeName = "SSISReportGeneratorTask100.SSISReportGeneratorTaskUIInterface" +
         ",SSISReportGeneratorTask100," +
-        "Version=1.3.0.11," +
+        "Version=1.3.0.14," +
         "Culture=Neutral," +
         "PublicKeyToken=baf53b3fe9523f48",
         TaskContact = "cosmin.vlasiu@gmail.com",
@@ -122,9 +122,10 @@ namespace SSISReportGeneratorTask100.SSIS
                 isBaseValid = false;
             }
 
-            if (SendFileByEmail == Keys.TRUE)
+            if (SendFileByEmail == Keys.TRUE && (string.IsNullOrEmpty(SmtpFrom) || string.IsNullOrEmpty(SmtpRecipients)))
             {
-
+                componentEvents.FireError(0, "SSISReportGeneratorTask", "Please specify the minimal elements to send the email: the Sender and the Recipient(s) addresses.", "", 0);
+                isBaseValid = false;
             }
 
             return isBaseValid ? DTSExecResult.Success : DTSExecResult.Failure;
@@ -216,8 +217,11 @@ namespace SSISReportGeneratorTask100.SSIS
                 if (SendFileByEmail == Keys.TRUE)
                 {
                     componentEvents.FireInformation(0, "SSISReportGeneratorTask",
-                                                string.Format("Preparing to send the file by email from -{0}- to -{1}-", SmtpFrom, SmtpRecipients),
-                                                string.Empty, 0, ref refire);
+                                                    string.Format("Prepare to send the file by email from -{0}- to -{1}-",
+                                                                   Tools.EvaluateExpression(SmtpFrom, variableDispenser),
+                                                                   Tools.EvaluateExpression(SmtpRecipients, variableDispenser)),
+                                                    string.Empty, 0, ref refire);
+
                     Tools.SendEmail(variableDispenser,
                                     connections,
                                     componentEvents,

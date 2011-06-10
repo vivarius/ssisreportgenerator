@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.DataTransformationServices.Controls;
@@ -16,11 +17,12 @@ namespace SSISReportGeneratorTask100
             _taskHost = taskHost;
             Connections = connections;
             LoadSMTPConnections();
+            LoadVariablesInComboBoxes();
 
-            txFrom.Text = (_taskHost.Properties[Keys.FROM].GetValue(_taskHost) != null)
+            cmbFrom.Text = (_taskHost.Properties[Keys.FROM].GetValue(_taskHost) != null)
                                 ? _taskHost.Properties[Keys.FROM].GetValue(_taskHost).ToString()
                                 : string.Empty;
-            txTo.Text = (_taskHost.Properties[Keys.FROM].GetValue(_taskHost) != null)
+            cmbTo.Text = (_taskHost.Properties[Keys.FROM].GetValue(_taskHost) != null)
                                 ? _taskHost.Properties[Keys.RECIPIENTS].GetValue(_taskHost).ToString()
                                 : string.Empty;
             txSubject.Text = (_taskHost.Properties[Keys.FROM].GetValue(_taskHost) != null)
@@ -40,34 +42,6 @@ namespace SSISReportGeneratorTask100
         }
 
         public Connections Connections { get; set; }
-
-        private void btFrom_Click(object sender, EventArgs e)
-        {
-            using (ExpressionBuilder expressionBuilder = ExpressionBuilder.Instantiate(_taskHost.Variables,
-                                                                                       _taskHost.VariableDispenser,
-                                                                                       Type.GetType("String"),
-                                                                                       txFrom.Text))
-            {
-                if (expressionBuilder.ShowDialog() == DialogResult.OK)
-                {
-                    txFrom.Text = expressionBuilder.Expression;
-                }
-            }
-        }
-
-        private void btTo_Click(object sender, EventArgs e)
-        {
-            using (ExpressionBuilder expressionBuilder = ExpressionBuilder.Instantiate(_taskHost.Variables,
-                                                                                       _taskHost.VariableDispenser,
-                                                                                       Type.GetType("String"),
-                                                                                       txTo.Text))
-            {
-                if (expressionBuilder.ShowDialog() == DialogResult.OK)
-                {
-                    txTo.Text = expressionBuilder.Expression;
-                }
-            }
-        }
 
         private void btSubject_Click(object sender, EventArgs e)
         {
@@ -99,8 +73,8 @@ namespace SSISReportGeneratorTask100
 
         private void btOk_Click(object sender, EventArgs e)
         {
-            _taskHost.Properties[Keys.FROM].SetValue(_taskHost, txFrom.Text);
-            _taskHost.Properties[Keys.RECIPIENTS].SetValue(_taskHost, txTo.Text);
+            _taskHost.Properties[Keys.FROM].SetValue(_taskHost, cmbFrom.Text);
+            _taskHost.Properties[Keys.RECIPIENTS].SetValue(_taskHost, cmbTo.Text);
             _taskHost.Properties[Keys.EMAIL_SUBJECT].SetValue(_taskHost, txSubject.Text);
             _taskHost.Properties[Keys.EMAIL_BODY].SetValue(_taskHost, txBody.Text);
             _taskHost.Properties[Keys.SMTP_SERVER].SetValue(_taskHost, cmbSMTPSrv.Text);
@@ -115,11 +89,19 @@ namespace SSISReportGeneratorTask100
 
             cmbSMTPSrv.Items.AddRange(Connections.Cast<ConnectionManager>().Where(connection => connection.CreationName.Contains("SMTP"))
                                                                       .Select(connection => connection.Name).ToArray());
+        }
 
-            //foreach (ConnectionManager connection in Connections.Cast<ConnectionManager>().Where(connection => connection.CreationName.Contains("SMTP")))
-            //{
-            //    cmbSMTPSrv.Items.Add(connection.Name);
-            //}
+
+        /// <summary>
+        /// Loads the variables in combo boxes.
+        /// </summary>
+        private void LoadVariablesInComboBoxes()
+        {
+            var result = _taskHost.Variables.Cast<Variable>().Where(variable => Type.GetTypeCode(Type.GetType("System.String")) == variable.DataType)
+                                             .Select(variable => string.Format("@[{0}::{1}]", variable.Namespace, variable.Name)).ToArray();
+
+            cmbFrom.Items.AddRange(result);
+            cmbTo.Items.AddRange(result);
         }
     }
 }

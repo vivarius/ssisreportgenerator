@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -31,6 +30,8 @@ namespace SSISReportGeneratorTask100
 
         public const string TRUE = "True";
         public const string FALSE = "False";
+
+        public const string REGEX_EMAIL = @"^[a-z0-9][a-z0-9_\.-]{0,}[a-z0-9]@[a-z0-9][a-z0-9_\.-]{0,}[a-z0-9][\.][a-z0-9]{2,4}$";
     }
 
     internal static class ConfigurationType
@@ -94,7 +95,7 @@ namespace SSISReportGeneratorTask100
             {
 
                 componentEvents.FireInformation(0, "SSISReportGeneratorTask",
-                                                "Building the mail",
+                                                "Build the e-mail...",
                                                 string.Empty, 0, ref refire);
 
                 using (MailMessage mailMessage = new MailMessage
@@ -104,7 +105,7 @@ namespace SSISReportGeneratorTask100
                                                          Body = EvaluateExpression(body, variableDispenser).ToString(),
                                                      })
                 {
-                    string[] strTo = to.Split(';');
+                    var strTo = EvaluateExpression(to, variableDispenser).ToString().Split(';');
 
                     foreach (string item in strTo)
                     {
@@ -113,14 +114,10 @@ namespace SSISReportGeneratorTask100
 
                     mailMessage.Attachments.Add(new Attachment(filePath));
                     componentEvents.FireInformation(0, "SSISReportGeneratorTask",
-                                                    "File attachement added",
+                                                    "File attachment added",
                                                     string.Empty, 0, ref refire);
                     try
                     {
-                        componentEvents.FireInformation(0, "SSISReportGeneratorTask",
-                                                        "File attachement added",
-                                                        string.Empty, 0, ref refire);
-
                         componentEvents.FireInformation(0, "SSISReportGeneratorTask",
                                                         string.Format("Send e-mail using {0}", GetConnectionParameter(connections[smtp].ConnectionString, "SmtpServer")),
                                                         string.Empty, 0, ref refire);
@@ -132,10 +129,11 @@ namespace SSISReportGeneratorTask100
                                                         UseDefaultCredentials = Convert.ToBoolean(GetConnectionParameter(connections[smtp].ConnectionString, "UseWindowsAuthentication"))
                                                     };
 
-                        componentEvents.FireInformation(0, "SSISReportGeneratorTask",
-                                                        "Send the email",
-                                                        string.Empty, 0, ref refire);
+                        componentEvents.FireInformation(0, "SSISReportGeneratorTask", "Send the e-mail", string.Empty, 0, ref refire);
+
                         smtpClient.Send(mailMessage);
+
+                        componentEvents.FireInformation(0, "SSISReportGeneratorTask", "E-mail sended", string.Empty, 0, ref refire);
                     }
                     catch (Exception exception)
                     {
@@ -166,7 +164,8 @@ namespace SSISReportGeneratorTask100
         {
             object variableObject;
 
-            Regex regex = new Regex(@"^[a-z0-9][a-z0-9_\.-]{0,}[a-z0-9]@[a-z0-9][a-z0-9_\.-]{0,}[a-z0-9][\.][a-z0-9]{2,4}$", RegexOptions.IgnoreCase);
+            Regex regex = new Regex(Keys.REGEX_EMAIL, RegexOptions.IgnoreCase);
+
             if (regex.IsMatch(mappedParam))
                 return mappedParam;
 
