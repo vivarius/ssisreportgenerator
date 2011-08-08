@@ -106,6 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DownloadIcon.ico" />
+    <EmbeddedResource Include="Report.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\Settings.settings">
@@ -275,8 +276,8 @@
     <PostBuildEvent>path "C:\Program Files\Microsoft SDKs\Windows\v6.0A\bin"
 gacutil /uf "SSISReportGeneratorTask100"
 del "C:\Program Files (x86)\Microsoft SQL Server\100\DTS\Tasks\SSISReportGeneratorTask100.dll"
-copy "$(TargetDir)SSISReportGeneratorTask100.dll" "C:\Program Files (x86)\Microsoft SQL Server\100\DTS\Tasks\"
-gacutil -i "$(TargetDir)SSISReportGeneratorTask100.dll"</PostBuildEvent>
+copy $(TargetPath) "C:\Program Files (x86)\Microsoft SQL Server\100\DTS\Tasks\"
+gacutil -i $(TargetPath)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
