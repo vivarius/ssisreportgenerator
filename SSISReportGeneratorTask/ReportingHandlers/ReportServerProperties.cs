@@ -3,6 +3,13 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using SSISReportGeneratorTask100.ReportService2005;
+using SSISReportGeneratorTask100.ReportService2006;
+using CatalogItem = SSISReportGeneratorTask100.ReportService2005.CatalogItem;
+using CredentialRetrievalEnum = SSISReportGeneratorTask100.ReportService2005.CredentialRetrievalEnum;
+using DataSource = SSISReportGeneratorTask100.ReportService2005.DataSource;
+using DataSourceDefinition = SSISReportGeneratorTask100.ReportService2005.DataSourceDefinition;
+using DataSourceReference = SSISReportGeneratorTask100.ReportService2005.DataSourceReference;
+using ItemTypeEnum = SSISReportGeneratorTask100.ReportService2005.ItemTypeEnum;
 
 namespace SSISReportGeneratorTask100.ReportingHandlers
 {
@@ -10,6 +17,8 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
     {
         #region ctor
         protected ReportServerProperties() { }
+
+        public bool IsSharePointIntegratedMode { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReportServerProperties"/> class.
@@ -20,17 +29,30 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
             ReportServer = reportServer;
         }
 
-        private ReportingService2005 _reportsServerInstance;
+        private ReportingService2005 _reportsServerInstance2005;
+        private ReportingService2006 _reportsServerInstance2006;
 
         private CatalogItem[] _returnedItems;
         #endregion
 
         #region Properties
-        public ReportingService2005 ReportsServerInstance
+        public ReportingService2005 ReportsServerInstance2005
         {
             get
             {
-                return _reportsServerInstance ?? (_reportsServerInstance = new ReportingService2005
+                return _reportsServerInstance2005 ?? (_reportsServerInstance2005 = new ReportingService2005
+                                                            {
+                                                                Credentials = System.Net.CredentialCache.DefaultCredentials,
+                                                                Url = ReportServer
+                                                            });
+            }
+        }
+
+        public ReportingService2006 ReportsServerInstance2006
+        {
+            get
+            {
+                return _reportsServerInstance2006 ?? (_reportsServerInstance2006 = new ReportingService2006
                 {
                     Credentials = System.Net.CredentialCache.DefaultCredentials,
                     Url = ReportServer
@@ -96,7 +118,7 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
                                     };
             try
             {
-                _reportsServerInstance.CreateDataSource(dataSourceName,
+                _reportsServerInstance2005.CreateDataSource(dataSourceName,
                                      dataSourceLocation,
                                      false,
                                      dataSourceDefinition,
@@ -125,7 +147,7 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
 
             try
             {
-                _reportsServerInstance.CreateFolder(folderName, folderDestinationPath.Replace(@"\", "/"), null);
+                _reportsServerInstance2005.CreateFolder(folderName, folderDestinationPath.Replace(@"\", "/"), null);
                 resVal = true;
             }
             catch (Exception)
@@ -144,7 +166,7 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
         /// <returns></returns>
         public DataSource GetDataSource(string sharedDataSourcePath, string dataSourceName)
         {
-            var dataSources = ReportsServerInstance.GetItemDataSources(sharedDataSourcePath);
+            var dataSources = ReportsServerInstance2005.GetItemDataSources(sharedDataSourcePath);
 
             return dataSources.Where(dataSource => dataSource.Name == dataSourceName).FirstOrDefault();
         }
@@ -156,7 +178,7 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
         /// <returns></returns>
         public DataSourceDefinition GetDataSourceDefinition(string sharedDataSourcePath)
         {
-            return ReportsServerInstance.GetDataSourceContents(sharedDataSourcePath);
+            return ReportsServerInstance2005.GetDataSourceContents(sharedDataSourcePath);
         }
 
         /// <summary>
@@ -176,7 +198,7 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
                 string fullReportPath = (reportLocation + "/" + reportName).Replace("//", @"/");
                 string fullDataSourcePath = (dataSourcePath.Replace(dataSourceName, string.Empty) + dataSourceName).Replace(@"\", @"/");
 
-                DataSource[] dataSources = _reportsServerInstance.GetItemDataSources(fullReportPath);
+                DataSource[] dataSources = _reportsServerInstance2005.GetItemDataSources(fullReportPath);
 
                 var dsRef = new DataSourceReference
                                 {
@@ -185,7 +207,7 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
 
                 dataSources[0].Item = dsRef;
 
-                _reportsServerInstance.SetItemDataSources(fullReportPath, dataSources);
+                _reportsServerInstance2005.SetItemDataSources(fullReportPath, dataSources);
 
                 resVal = true;
             }
@@ -215,7 +237,7 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
                 Value = folderName
             };
 
-            _returnedItems = _reportsServerInstance.FindItems(path, BooleanOperatorEnum.Or, conditions);
+            _returnedItems = _reportsServerInstance2005.FindItems(path, BooleanOperatorEnum.Or, conditions);
 
             return (_returnedItems.Where(item => item.Type == type)).Any(item => item.Path == path + "/" + folderName);
         }
@@ -236,7 +258,7 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
             bool resVal = false;
             if (CheckItemExist(type, path, folderName))
             {
-                _reportsServerInstance.DeleteItem(path + "/" + folderName);
+                _reportsServerInstance2005.DeleteItem(path + "/" + folderName);
                 resVal = true;
             }
             return resVal;
@@ -272,7 +294,7 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
                            reportDestinationPath.Replace(reportNameSource, string.Empty).Replace(@"\", "/"),
                            reportNameSource);
 
-                ReportsServerInstance.CreateReport(reportNameSource,
+                ReportsServerInstance2005.CreateReport(reportNameSource,
                                                    reportDestinationPath.Replace(reportNameSource, string.Empty).Replace(@"\", "/"),
                                                    true,
                                                    reportDefinition,
@@ -333,7 +355,7 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
                            reportDestinationPath.Replace(fileName, string.Empty).Replace(@"\", "/"),
                            fileName);
 
-                ReportsServerInstance.CreateReport(fileName,
+                ReportsServerInstance2005.CreateReport(fileName,
                                                    reportDestinationPath.Replace(fileName, string.Empty).Replace(@"\", "/"),
                                                    true,
                                                    File.ReadAllBytes(filePath),
@@ -366,8 +388,11 @@ namespace SSISReportGeneratorTask100.ReportingHandlers
 
         public void Dispose()
         {
-            if (_reportsServerInstance != null)
-                _reportsServerInstance.Dispose();
+            if (_reportsServerInstance2005 != null)
+                _reportsServerInstance2005.Dispose();
+
+            if (_reportsServerInstance2006 != null)
+                _reportsServerInstance2006.Dispose();
         }
 
         #endregion

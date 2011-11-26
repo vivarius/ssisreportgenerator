@@ -6,8 +6,14 @@ using Microsoft.DataTransformationServices.Controls;
 using Microsoft.SqlServer.Dts.Runtime;
 using Microsoft.SqlServer.Dts.Runtime.Wrapper;
 using SSISReportGeneratorTask100.ReportExecution2005;
+using SSISReportGeneratorTask100.ReportService2006;
 using SSISReportGeneratorTask100.ReportingHandlers;
 using SSISReportGeneratorTask100.ReportService2005;
+using CatalogItem = SSISReportGeneratorTask100.ReportService2005.CatalogItem;
+using DataSource = SSISReportGeneratorTask100.ReportService2005.DataSource;
+using DataSourceReference = SSISReportGeneratorTask100.ReportService2005.DataSourceReference;
+using ItemTypeEnum = SSISReportGeneratorTask100.ReportService2005.ItemTypeEnum;
+using Policy = SSISReportGeneratorTask100.ReportService2005.Policy;
 using ReportParameter = SSISReportGeneratorTask100.ReportService2005.ReportParameter;
 using TaskHost = Microsoft.SqlServer.Dts.Runtime.TaskHost;
 using Variable = Microsoft.SqlServer.Dts.Runtime.Variable;
@@ -26,7 +32,8 @@ namespace SSISReportGeneratorTask100
         private CatalogItem _catalogItem;
         private bool _isFirstLoad;
         private string _reportPath;
-        private ReportingService2005 _reportServerProperties;
+        private ReportingService2005 _reportServerProperties2005;
+        private ReportingService2006 _reportServerProperties2006;
 
         #endregion
 
@@ -131,7 +138,7 @@ namespace SSISReportGeneratorTask100
                         if (_taskHost.Properties[Keys.OUTPUT_TYPE].GetValue(_taskHost) != null)
                             cmbFileType.SelectedIndex = Tools.FindStringInComboBox(cmbFileType, _taskHost.Properties[Keys.OUTPUT_TYPE].GetValue(_taskHost).ToString(), -1);
 
-                        _reportServerProperties = ((ReportServerProperties)(SourceNode.TreeView.Tag)).ReportsServerInstance;
+                        _reportServerProperties2005 = ((ReportServerProperties)(SourceNode.TreeView.Tag)).ReportsServerInstance2005;
 
                         tvReportServerSource.SelectedNode.EnsureVisible();
 
@@ -166,7 +173,7 @@ namespace SSISReportGeneratorTask100
 
         void frmEditProperties_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            _reportServerProperties.Dispose();
+            _reportServerProperties2005.Dispose();
             ReportServerSource.Dispose();
         }
 
@@ -230,7 +237,7 @@ namespace SSISReportGeneratorTask100
         {
             treeView.BeginUpdate();
             treeView.Nodes.Clear();
-            treeView.Nodes.Add(TreeViewHandling.GetFolderAsNodes(reportingService2005.ReportsServerInstance, false));
+            treeView.Nodes.Add(TreeViewHandling.GetFolderAsNodes(reportingService2005.ReportsServerInstance2005, false));
             treeView.EndUpdate();
             treeView.Tag = reportingService2005;
         }
@@ -249,7 +256,6 @@ namespace SSISReportGeneratorTask100
             lbSelectedReportName.Text = _reportName;
             btPreview.Enabled = true;
             lbRenderedReportName.Text = EvaluateExpression(cmbReportName.Text, _taskHost.VariableDispenser).ToString();
-
         }
 
         /// <summary>
@@ -257,7 +263,7 @@ namespace SSISReportGeneratorTask100
         /// </summary>
         private void GetBasicInfo()
         {
-            CatalogItem[] catalogItems = _reportServerProperties.ListChildren(SourceNode.Parent.FullPath.Replace(SourceNode.TreeView.Nodes[0].Text, string.Empty).Replace(@"\", "/"), false);
+            CatalogItem[] catalogItems = _reportServerProperties2005.ListChildren(SourceNode.Parent.FullPath.Replace(SourceNode.TreeView.Nodes[0].Text, string.Empty).Replace(@"\", "/"), false);
             foreach (CatalogItem catalogItem in catalogItems.Where(catalogItem => catalogItem.Name == SourceNode.Text))
             {
                 _catalogItem = catalogItem;
@@ -289,7 +295,7 @@ namespace SSISReportGeneratorTask100
             {
                 lvDataSource.Items.Clear();
 
-                DataSource[] dataSources = _reportServerProperties.GetItemDataSources(_reportPath);
+                DataSource[] dataSources = _reportServerProperties2005.GetItemDataSources(_reportPath);
                 foreach (DataSource dataSource in dataSources)
                 {
                     var dsref = (DataSourceReference)dataSource.Item;
@@ -313,7 +319,7 @@ namespace SSISReportGeneratorTask100
             grdParameters.Rows.Clear();
             try
             {
-                ReportParameter[] parameter = _reportServerProperties.GetReportParameters(_reportPath, null, false, null, null);
+                ReportParameter[] parameter = _reportServerProperties2005.GetReportParameters(_reportPath, null, false, null, null);
                 foreach (ReportParameter reportParameter in parameter)
                 {
                     int index = grdParameters.Rows.Add();
@@ -368,7 +374,7 @@ namespace SSISReportGeneratorTask100
                 bool warning;
                 lvSecurity.Items.Clear();
 
-                Policy[] policies = _reportServerProperties.GetPolicies(_reportPath, out warning);
+                Policy[] policies = _reportServerProperties2005.GetPolicies(_reportPath, out warning);
 
                 foreach (Policy policie in policies)
                 {
@@ -389,9 +395,9 @@ namespace SSISReportGeneratorTask100
         //private void FillSnapshots()
         //{
         //    lvSnapshots.Items.Clear();
-        //    if (_reportServerProperties.ListReportHistory(_reportPath).Length > 0)
+        //    if (_reportServerProperties2005.ListReportHistory(_reportPath).Length > 0)
         //    {
-        //        foreach (ReportHistorySnapshot reportHistorySnapshot in _reportServerProperties.ListReportHistory(_reportPath))
+        //        foreach (ReportHistorySnapshot reportHistorySnapshot in _reportServerProperties2005.ListReportHistory(_reportPath))
         //        {
         //            var li = new ListViewItem
         //                         {
@@ -418,9 +424,9 @@ namespace SSISReportGeneratorTask100
         private void FillDependentItems()
         {
             lvDependentItems.Items.Clear();
-            if (_reportServerProperties.ListDependentItems(_reportPath).Length > 0)
+            if (_reportServerProperties2005.ListDependentItems(_reportPath).Length > 0)
             {
-                foreach (CatalogItem catalogItem in _reportServerProperties.ListDependentItems(_reportPath))
+                foreach (CatalogItem catalogItem in _reportServerProperties2005.ListDependentItems(_reportPath))
                 {
                     var li = new ListViewItem { Text = catalogItem.Name, Tag = catalogItem };
                     li.SubItems.Add(catalogItem.Path);
@@ -472,13 +478,7 @@ namespace SSISReportGeneratorTask100
         {
             var comboBoxCell = new DataGridViewComboBoxCell();
 
-            foreach (
-                Variable variable in
-                    Variables.Cast<Variable>().Where(
-                        variable =>
-                        variable.DataType == TypeCode.Object ||
-                        Type.GetTypeCode(Type.GetType(string.Format("System.{0}", parameterInfo))) == variable.DataType)
-                )
+            foreach (Variable variable in Variables.Cast<Variable>().Where(variable => variable.DataType == TypeCode.Object || Type.GetTypeCode(Type.GetType(string.Format("System.{0}", parameterInfo))) == variable.DataType))
             {
                 comboBoxCell.Items.Add(string.Format("@[{0}::{1}]", variable.Namespace, variable.Name));
             }
@@ -569,7 +569,7 @@ namespace SSISReportGeneratorTask100
 
         private void btOk_Click(object sender, EventArgs e)
         {
-            if (cmbFileType.SelectedItem.ToString().Trim() == string.Empty)
+            if (cmbFileType.SelectedItem == null || string.IsNullOrEmpty(cmbFileType.SelectedItem.ToString().Trim()))
             {
                 MessageBox.Show("Please choose exported file type");
                 cmbFileType.Focus();
@@ -667,7 +667,7 @@ namespace SSISReportGeneratorTask100
                 return;
 
             SourceNode = tvReportServerSource.SelectedNode;
-            _reportServerProperties = ((ReportServerProperties)(SourceNode.TreeView.Tag)).ReportsServerInstance;
+            _reportServerProperties2005 = ((ReportServerProperties)(SourceNode.TreeView.Tag)).ReportsServerInstance2005;
             _reportPath = SourceNode.FullPath.Replace(SourceNode.TreeView.Nodes[0].Text, string.Empty).Replace(@"\", "/");
             _reportName = tvReportServerSource.SelectedNode.Text;
 
@@ -683,7 +683,9 @@ namespace SSISReportGeneratorTask100
                         using (ExpressionBuilder expressionBuilder = ExpressionBuilder.Instantiate(_taskHost.Variables,
                                                                                                 _taskHost.VariableDispenser,
                                                                                                 Type.GetType((grdParameters.Rows[e.RowIndex].Cells[1]).Value.ToString().Trim()),
-                                                                                                string.Empty))
+                                                                                                (grdParameters.Rows[e.RowIndex].Cells[e.ColumnIndex - 1].Value) != null
+                                                                                                    ? grdParameters.Rows[e.RowIndex].Cells[e.ColumnIndex - 1].Value.ToString()
+                                                                                                    : string.Empty))
                         {
                             if (expressionBuilder.ShowDialog() == DialogResult.OK)
                             {
@@ -730,5 +732,6 @@ namespace SSISReportGeneratorTask100
             System.Diagnostics.Process.Start(linkLabel1.Text);
         }
         #endregion
+
     }
 }

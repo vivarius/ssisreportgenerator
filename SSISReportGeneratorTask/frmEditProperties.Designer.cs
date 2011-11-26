@@ -30,11 +30,15 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmEditProperties));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.btOk = new System.Windows.Forms.Button();
-            this.btCancel = new System.Windows.Forms.Button();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.lbSiteName = new System.Windows.Forms.Label();
+            this.txSiteName = new System.Windows.Forms.TextBox();
+            this.chkSharPointIntegratedMode = new System.Windows.Forms.CheckBox();
             this.cmbSourceVariables = new System.Windows.Forms.ComboBox();
             this.btLoad = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
@@ -103,6 +107,10 @@
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.btCancel = new System.Windows.Forms.Button();
+            this.btOk = new System.Windows.Forms.Button();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -118,31 +126,13 @@
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage5.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btOk
-            // 
-            this.btOk.Location = new System.Drawing.Point(689, 523);
-            this.btOk.Name = "btOk";
-            this.btOk.Size = new System.Drawing.Size(75, 23);
-            this.btOk.TabIndex = 0;
-            this.btOk.Text = "OK";
-            this.btOk.UseVisualStyleBackColor = true;
-            this.btOk.Click += new System.EventHandler(this.btOk_Click);
-            // 
-            // btCancel
-            // 
-            this.btCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btCancel.Location = new System.Drawing.Point(608, 523);
-            this.btCancel.Name = "btCancel";
-            this.btCancel.Size = new System.Drawing.Size(75, 23);
-            this.btCancel.TabIndex = 1;
-            this.btCancel.Text = "Cancel";
-            this.btCancel.UseVisualStyleBackColor = true;
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Location = new System.Drawing.Point(1, 2);
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -152,8 +142,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainer1.Size = new System.Drawing.Size(763, 515);
-            this.splitContainer1.SplitterDistance = 254;
+            this.splitContainer1.Size = new System.Drawing.Size(769, 515);
+            this.splitContainer1.SplitterDistance = 268;
             this.splitContainer1.TabIndex = 2;
             // 
             // splitContainer2
@@ -165,6 +155,9 @@
             // 
             // splitContainer2.Panel1
             // 
+            this.splitContainer2.Panel1.Controls.Add(this.lbSiteName);
+            this.splitContainer2.Panel1.Controls.Add(this.txSiteName);
+            this.splitContainer2.Panel1.Controls.Add(this.chkSharPointIntegratedMode);
             this.splitContainer2.Panel1.Controls.Add(this.cmbSourceVariables);
             this.splitContainer2.Panel1.Controls.Add(this.btLoad);
             this.splitContainer2.Panel1.Controls.Add(this.label3);
@@ -172,21 +165,50 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.tvReportServerSource);
-            this.splitContainer2.Size = new System.Drawing.Size(254, 515);
-            this.splitContainer2.SplitterDistance = 54;
+            this.splitContainer2.Size = new System.Drawing.Size(268, 515);
+            this.splitContainer2.SplitterDistance = 78;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // lbSiteName
+            // 
+            this.lbSiteName.AutoSize = true;
+            this.lbSiteName.Enabled = false;
+            this.lbSiteName.Location = new System.Drawing.Point(100, 55);
+            this.lbSiteName.Name = "lbSiteName";
+            this.lbSiteName.Size = new System.Drawing.Size(57, 13);
+            this.lbSiteName.TabIndex = 46;
+            this.lbSiteName.Text = "Site name:";
+            // 
+            // txSiteName
+            // 
+            this.txSiteName.Enabled = false;
+            this.txSiteName.Location = new System.Drawing.Point(163, 52);
+            this.txSiteName.Name = "txSiteName";
+            this.txSiteName.Size = new System.Drawing.Size(100, 20);
+            this.txSiteName.TabIndex = 45;
+            // 
+            // chkSharPointIntegratedMode
+            // 
+            this.chkSharPointIntegratedMode.AutoSize = true;
+            this.chkSharPointIntegratedMode.Location = new System.Drawing.Point(3, 54);
+            this.chkSharPointIntegratedMode.Name = "chkSharPointIntegratedMode";
+            this.chkSharPointIntegratedMode.Size = new System.Drawing.Size(78, 17);
+            this.chkSharPointIntegratedMode.TabIndex = 44;
+            this.chkSharPointIntegratedMode.Text = "SharePoint";
+            this.toolTip1.SetToolTip(this.chkSharPointIntegratedMode, "SharePoint Integrated Mode");
+            this.chkSharPointIntegratedMode.UseVisualStyleBackColor = true;
             // 
             // cmbSourceVariables
             // 
             this.cmbSourceVariables.FormattingEnabled = true;
             this.cmbSourceVariables.Location = new System.Drawing.Point(3, 25);
             this.cmbSourceVariables.Name = "cmbSourceVariables";
-            this.cmbSourceVariables.Size = new System.Drawing.Size(208, 21);
+            this.cmbSourceVariables.Size = new System.Drawing.Size(220, 21);
             this.cmbSourceVariables.TabIndex = 43;
             // 
             // btLoad
             // 
-            this.btLoad.Location = new System.Drawing.Point(217, 23);
+            this.btLoad.Location = new System.Drawing.Point(229, 22);
             this.btLoad.Name = "btLoad";
             this.btLoad.Size = new System.Drawing.Size(34, 23);
             this.btLoad.TabIndex = 4;
@@ -211,7 +233,7 @@
             this.tvReportServerSource.Location = new System.Drawing.Point(0, 0);
             this.tvReportServerSource.Name = "tvReportServerSource";
             this.tvReportServerSource.SelectedImageIndex = 0;
-            this.tvReportServerSource.Size = new System.Drawing.Size(254, 457);
+            this.tvReportServerSource.Size = new System.Drawing.Size(268, 433);
             this.tvReportServerSource.TabIndex = 4;
             this.tvReportServerSource.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvReportServerSource_AfterSelect);
             // 
@@ -231,11 +253,11 @@
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(505, 515);
+            this.tabControl1.Size = new System.Drawing.Size(497, 515);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -259,7 +281,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(497, 489);
+            this.tabPage1.Size = new System.Drawing.Size(489, 489);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Properties";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -454,7 +476,7 @@
             // btPreview
             // 
             this.btPreview.Enabled = false;
-            this.btPreview.Location = new System.Drawing.Point(378, 457);
+            this.btPreview.Location = new System.Drawing.Point(375, 457);
             this.btPreview.Name = "btPreview";
             this.btPreview.Size = new System.Drawing.Size(110, 26);
             this.btPreview.TabIndex = 78;
@@ -591,7 +613,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(497, 489);
+            this.tabPage2.Size = new System.Drawing.Size(489, 489);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Parameters";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -600,6 +622,14 @@
             // 
             this.grdParameters.AllowUserToAddRows = false;
             this.grdParameters.AllowUserToDeleteRows = false;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdParameters.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.grdParameters.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.grdParameters.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.grdColParams,
@@ -609,11 +639,27 @@
             this.grdColDefault,
             this.grdColVars,
             this.grdColExpression});
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.grdParameters.DefaultCellStyle = dataGridViewCellStyle3;
             this.grdParameters.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grdParameters.Location = new System.Drawing.Point(3, 3);
             this.grdParameters.Name = "grdParameters";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grdParameters.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.grdParameters.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
-            this.grdParameters.Size = new System.Drawing.Size(491, 483);
+            this.grdParameters.Size = new System.Drawing.Size(483, 483);
             this.grdParameters.TabIndex = 60;
             this.grdParameters.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdParameters_CellContentClick);
             // 
@@ -666,9 +712,9 @@
             // 
             // grdColExpression
             // 
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.Padding = new System.Windows.Forms.Padding(2);
-            this.grdColExpression.DefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(2);
+            this.grdColExpression.DefaultCellStyle = dataGridViewCellStyle2;
             this.grdColExpression.HeaderText = "f(x)";
             this.grdColExpression.Name = "grdColExpression";
             this.grdColExpression.Resizable = System.Windows.Forms.DataGridViewTriState.False;
@@ -734,7 +780,7 @@
             this.tabPage3.Controls.Add(this.lvDataSource);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(497, 489);
+            this.tabPage3.Size = new System.Drawing.Size(489, 489);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Data Sources";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -747,7 +793,7 @@
             this.lvDataSource.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvDataSource.Location = new System.Drawing.Point(0, 0);
             this.lvDataSource.Name = "lvDataSource";
-            this.lvDataSource.Size = new System.Drawing.Size(497, 489);
+            this.lvDataSource.Size = new System.Drawing.Size(489, 489);
             this.lvDataSource.SmallImageList = this.imagesCollection;
             this.lvDataSource.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvDataSource.TabIndex = 61;
@@ -769,7 +815,7 @@
             this.tabPage4.Controls.Add(this.lvSecurity);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(497, 489);
+            this.tabPage4.Size = new System.Drawing.Size(489, 489);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Security";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -782,7 +828,7 @@
             this.lvSecurity.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvSecurity.Location = new System.Drawing.Point(0, 0);
             this.lvSecurity.Name = "lvSecurity";
-            this.lvSecurity.Size = new System.Drawing.Size(497, 489);
+            this.lvSecurity.Size = new System.Drawing.Size(489, 489);
             this.lvSecurity.SmallImageList = this.imagesCollection;
             this.lvSecurity.TabIndex = 53;
             this.lvSecurity.UseCompatibleStateImageBehavior = false;
@@ -803,7 +849,7 @@
             this.tabPage5.Controls.Add(this.lvDependentItems);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Size = new System.Drawing.Size(497, 489);
+            this.tabPage5.Size = new System.Drawing.Size(489, 489);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Dependent Items";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -817,7 +863,7 @@
             this.lvDependentItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvDependentItems.Location = new System.Drawing.Point(0, 0);
             this.lvDependentItems.Name = "lvDependentItems";
-            this.lvDependentItems.Size = new System.Drawing.Size(497, 489);
+            this.lvDependentItems.Size = new System.Drawing.Size(489, 489);
             this.lvDependentItems.SmallImageList = this.imagesCollection;
             this.lvDependentItems.TabIndex = 65;
             this.lvDependentItems.UseCompatibleStateImageBehavior = false;
@@ -838,13 +884,44 @@
             this.columnHeader3.Text = "Snapshot ID";
             this.columnHeader3.Width = 140;
             // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.linkLabel1);
+            this.panel1.Controls.Add(this.btCancel);
+            this.panel1.Controls.Add(this.btOk);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(0, 521);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(769, 32);
+            this.panel1.TabIndex = 4;
+            // 
+            // btCancel
+            // 
+            this.btCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btCancel.Location = new System.Drawing.Point(613, 3);
+            this.btCancel.Name = "btCancel";
+            this.btCancel.Size = new System.Drawing.Size(75, 23);
+            this.btCancel.TabIndex = 3;
+            this.btCancel.Text = "Cancel";
+            this.btCancel.UseVisualStyleBackColor = true;
+            // 
+            // btOk
+            // 
+            this.btOk.Location = new System.Drawing.Point(694, 3);
+            this.btOk.Name = "btOk";
+            this.btOk.Size = new System.Drawing.Size(75, 23);
+            this.btOk.TabIndex = 2;
+            this.btOk.Text = "OK";
+            this.btOk.UseVisualStyleBackColor = true;
+            this.btOk.Click += new System.EventHandler(this.btOk_Click);
+            // 
             // linkLabel1
             // 
             this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(1, 528);
+            this.linkLabel1.Location = new System.Drawing.Point(3, 8);
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(196, 13);
-            this.linkLabel1.TabIndex = 3;
+            this.linkLabel1.TabIndex = 4;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "http://ssisreportgenerator.codeplex.com";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
@@ -855,11 +932,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btCancel;
-            this.ClientSize = new System.Drawing.Size(763, 546);
-            this.Controls.Add(this.linkLabel1);
+            this.ClientSize = new System.Drawing.Size(769, 553);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.btCancel);
-            this.Controls.Add(this.btOk);
             this.Name = "frmEditProperties";
             this.Text = "Report Generator";
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -879,15 +954,14 @@
             this.tabPage3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Button btOk;
-        private System.Windows.Forms.Button btCancel;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
@@ -958,7 +1032,14 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox chkEmail;
         private System.Windows.Forms.Button btEmail;
+        private System.Windows.Forms.CheckBox chkSharPointIntegratedMode;
+        private System.Windows.Forms.TextBox txSiteName;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Label lbSiteName;
+        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Button btCancel;
+        private System.Windows.Forms.Button btOk;
 
     }
 }

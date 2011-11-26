@@ -109,6 +109,8 @@
             // 
             // txBody
             // 
+            this.txBody.AcceptsReturn = true;
+            this.txBody.AcceptsTab = true;
             this.txBody.Location = new System.Drawing.Point(91, 112);
             this.txBody.Multiline = true;
             this.txBody.Name = "txBody";

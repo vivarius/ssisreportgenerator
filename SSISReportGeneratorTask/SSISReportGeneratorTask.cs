@@ -17,7 +17,7 @@ namespace SSISReportGeneratorTask100.SSIS
         DisplayName = "SSRS Report Generator Task",
         UITypeName = "SSISReportGeneratorTask100.SSISReportGeneratorTaskUIInterface" +
         ",SSISReportGeneratorTask100," +
-        "Version=1.2.0.0," +
+        "Version=1.3.0.0," +
         "Culture=Neutral," +
         "PublicKeyToken=baf53b3fe9523f48",
         IconResource = "SSISReportGeneratorTask100.Report.ico",
@@ -63,6 +63,11 @@ namespace SSISReportGeneratorTask100.SSIS
         public string EmailSubject { get; set; }
         [Category("Report Generator"), Description("EmailBody")]
         public string EmailBody { get; set; }
+        [Category("Report Generator"), Description("Is SharePoint Integrated Mode?")]
+        public bool IsSharePointIntegratedMode { get; set; }
+        [Category("Report Generator"), Description("Share Point Site Name")]
+        public string SharePointSiteName { get; set; }
+
         #endregion
 
         #region Private Properties
@@ -130,6 +135,9 @@ namespace SSISReportGeneratorTask100.SSIS
                 isBaseValid = false;
             }
 
+            //bool refire = false;
+            //GenerateReport(connections, variableDispenser, componentEvents, refire);
+
             return isBaseValid ? DTSExecResult.Success : DTSExecResult.Failure;
         }
 
@@ -149,13 +157,21 @@ namespace SSISReportGeneratorTask100.SSIS
         public override DTSExecResult Execute(Connections connections, VariableDispenser variableDispenser, IDTSComponentEvents componentEvents, IDTSLogging log, object transaction)
         {
             bool refire = false;
+
+            GenerateReport(connections, variableDispenser, componentEvents, refire);
+
+            return base.Execute(connections, variableDispenser, componentEvents, log, transaction);
+        }
+
+        private void GenerateReport(Connections connections, VariableDispenser variableDispenser,
+                                    IDTSComponentEvents componentEvents, bool refire)
+        {
             componentEvents.FireInformation(0, "SSISReportGeneratorTask", "Get Needed Variables", string.Empty, 0, ref refire);
 
             GetNeededVariables(variableDispenser, componentEvents);
 
             try
             {
-
                 string reportName = ReportName;
 
                 if (!string.IsNullOrEmpty(ReportNameFromExpression))
@@ -166,7 +182,8 @@ namespace SSISReportGeneratorTask100.SSIS
 
                 var reportTools = new ReportTools();
 
-                componentEvents.FireInformation(0, "SSISReportGeneratorTask", "Get Report's parameters", string.Empty, 0, ref refire);
+                componentEvents.FireInformation(0, "SSISReportGeneratorTask", "Get Report's parameters", string.Empty, 0,
+                                                ref refire);
                 var reportParameters = new ReportParameter[((MappingParams)MappingParams).Count];
 
                 int paramCounter = 0;
@@ -176,29 +193,33 @@ namespace SSISReportGeneratorTask100.SSIS
                     reportParameters[paramCounter++] = new ReportParameter
                                                            {
                                                                Name = mappingParams.Name,
-                                                               Value = Tools.EvaluateExpression(mappingParams.Value, variableDispenser).ToString()
+                                                               Value =
+                                                                   Tools.EvaluateExpression(mappingParams.Value,
+                                                                                            variableDispenser).ToString()
                                                            };
 
                     componentEvents.FireInformation(0, "SSISReportGeneratorTask",
-                                                        string.Format("Param. {0} - {1} with value: {2}",
-                                                                      mappingParams.Name,
-                                                                      mappingParams.Value,
-                                                                      Tools.EvaluateExpression(mappingParams.Value, variableDispenser)),
-                                                        string.Empty, 0, ref refire);
+                                                    string.Format("Param. {0} - {1} with value: {2}",
+                                                                  mappingParams.Name,
+                                                                  mappingParams.Value,
+                                                                  Tools.EvaluateExpression(mappingParams.Value,
+                                                                                           variableDispenser)),
+                                                    string.Empty, 0, ref refire);
                 }
 
                 componentEvents.FireInformation(0, "SSISReportGeneratorTask",
-                                                    string.Format("Start to render the report for {0}{1} OutPutType is {2}",
-                                                                  Tools.EvaluateExpression(ReportServer, variableDispenser),
-                                                                  ReportPath + "/" + reportName,
-                                                                  OutPutType),
-                                                    string.Empty, 0, ref refire);
+                                                string.Format("Start to render the report for {0}{1} OutPutType is {2}",
+                                                              Tools.EvaluateExpression(ReportServer, variableDispenser),
+                                                              ReportPath + "/" + reportName,
+                                                              OutPutType),
+                                                string.Empty, 0, ref refire);
 
-                byte[] reportSource = reportTools.RenderReport(Tools.EvaluateExpression(ReportServer, variableDispenser).ToString(),
-                                                               ReportPath + "/" + reportName,
-                                                               reportParameters,
-                                                               OutPutType,
-                                                               componentEvents);
+                byte[] reportSource =
+                    reportTools.RenderReport(Tools.EvaluateExpression(ReportServer, variableDispenser).ToString(),
+                                             ReportPath + "/" + reportName,
+                                             reportParameters,
+                                             OutPutType,
+                                             componentEvents);
 
                 var targetFile = GetTargetFile(variableDispenser, connections);
 
@@ -212,16 +233,16 @@ namespace SSISReportGeneratorTask100.SSIS
                 File.WriteAllBytes(targetFile, reportSource);
 
                 componentEvents.FireInformation(0, "SSISReportGeneratorTask",
-                                string.Format("The file was generated successfully to {0}",
-                                              targetFile),
-                                string.Empty, 0, ref refire);
+                                                string.Format("The file was generated successfully to {0}",
+                                                              targetFile),
+                                                string.Empty, 0, ref refire);
 
                 if (SendFileByEmail == Keys.TRUE)
                 {
                     componentEvents.FireInformation(0, "SSISReportGeneratorTask",
                                                     string.Format("Prepare to send the file by email from -{0}- to -{1}-",
-                                                                   Tools.EvaluateExpression(SmtpFrom, variableDispenser),
-                                                                   Tools.EvaluateExpression(SmtpRecipients, variableDispenser)),
+                                                                  Tools.EvaluateExpression(SmtpFrom, variableDispenser),
+                                                                  Tools.EvaluateExpression(SmtpRecipients, variableDispenser)),
                                                     string.Empty, 0, ref refire);
 
                     Tools.SendEmail(variableDispenser,
@@ -234,22 +255,19 @@ namespace SSISReportGeneratorTask100.SSIS
                                     EmailBody,
                                     SmtpServer);
                 }
-
             }
             catch (Exception ex)
             {
-                componentEvents.FireError(0, "SSISReportGeneratorTask", string.Format("Problem: {0} {1}", ex.Message, ex.StackTrace), "", 0);
+                componentEvents.FireError(0, "SSISReportGeneratorTask",
+                                          string.Format("Problem: {0} {1}", ex.Message, ex.StackTrace), "", 0);
             }
             finally
             {
-
                 if (_vars.Locked)
                 {
                     _vars.Unlock();
                 }
             }
-
-            return base.Execute(connections, variableDispenser, componentEvents, log, transaction);
         }
 
         #endregion

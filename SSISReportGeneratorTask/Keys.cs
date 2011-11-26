@@ -28,6 +28,9 @@ namespace SSISReportGeneratorTask100
         public const string EMAIL_SUBJECT = "EmailSubject";
         public const string EMAIL_BODY = "EmailBody";
 
+        public const string IsSharePointIntegratedMode = "IsSharePointIntegratedMode";
+        public const string SITE_NAME = "SharePointSiteName";
+
         public const string TRUE = "True";
         public const string FALSE = "False";
 
@@ -162,26 +165,23 @@ namespace SSISReportGeneratorTask100
         /// <returns></returns>
         public static object EvaluateExpression(string mappedParam, VariableDispenser variableDispenser)
         {
-            object variableObject;
-
             Regex regex = new Regex(Keys.REGEX_EMAIL, RegexOptions.IgnoreCase);
 
             if (regex.IsMatch(mappedParam))
                 return mappedParam;
 
-            if (mappedParam.Contains("@"))
+            object variableObject = null;
+
+            try
             {
                 var expressionEvaluatorClass = new ExpressionEvaluatorClass
                 {
                     Expression = mappedParam
                 };
 
-                expressionEvaluatorClass.Evaluate(DtsConvert.GetExtendedInterface(variableDispenser),
-                                                  out variableObject,
-                                                  false);
-
+                expressionEvaluatorClass.Evaluate(DtsConvert.GetExtendedInterface(variableDispenser), out variableObject, false);
             }
-            else
+            catch (Exception) // for hardcoded values
             {
                 variableObject = mappedParam;
             }
