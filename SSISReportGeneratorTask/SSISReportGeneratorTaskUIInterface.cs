@@ -4,7 +4,7 @@ using Microsoft.SqlServer.Dts.Runtime;
 using Microsoft.SqlServer.Dts.Runtime.Design;
 
 
-namespace SSISReportGeneratorTask100
+namespace SSISReportGeneratorTask110
 {
     class SSISReportGeneratorTaskUIInterface : IDtsTaskUI
     {

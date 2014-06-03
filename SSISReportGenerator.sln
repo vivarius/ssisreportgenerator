@@ -1,18 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SSISReportGeneratorTask", "SSISReportGeneratorTask\SSISReportGeneratorTask.csproj", "{0A919EB1-E285-4D92-9FB3-254B10B12A6C}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 2
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs13
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = SSISReportGeneratorTask\\SSISReportGeneratorTask.csproj
-		SccProjectName1 = SSISReportGeneratorTask
-		SccLocalPath1 = SSISReportGeneratorTask
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -20,8 +11,8 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0A919EB1-E285-4D92-9FB3-254B10B12A6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0A919EB1-E285-4D92-9FB3-254B10B12A6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0A919EB1-E285-4D92-9FB3-254B10B12A6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0A919EB1-E285-4D92-9FB3-254B10B12A6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A919EB1-E285-4D92-9FB3-254B10B12A6C}.Release|Any CPU.ActiveCfg = Release|x64
+		{0A919EB1-E285-4D92-9FB3-254B10B12A6C}.Release|Any CPU.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{D183A3D8-5FD8-494B-B014-37F57B35E655}") = "SSISReportGenerator Package", "SSISReportGenerator Package\SSISReportGenerator Package.dtproj", "{DB3F1E83-D81F-46B4-992F-B921409DF4DB}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "SSISReportGenerator Package", "SSISReportGenerator Package\SSISReportGenerator Package.dtproj", "{DB3F1E83-D81F-46B4-992F-B921409DF4DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

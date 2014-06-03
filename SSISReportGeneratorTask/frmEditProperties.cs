@@ -5,21 +5,21 @@ using System.Windows.Forms;
 using Microsoft.DataTransformationServices.Controls;
 using Microsoft.SqlServer.Dts.Runtime;
 using Microsoft.SqlServer.Dts.Runtime.Wrapper;
-using SSISReportGeneratorTask100.ReportExecution2005;
-using SSISReportGeneratorTask100.ReportService2006;
-using SSISReportGeneratorTask100.ReportingHandlers;
-using SSISReportGeneratorTask100.ReportService2005;
-using CatalogItem = SSISReportGeneratorTask100.ReportService2005.CatalogItem;
-using DataSource = SSISReportGeneratorTask100.ReportService2005.DataSource;
-using DataSourceReference = SSISReportGeneratorTask100.ReportService2005.DataSourceReference;
-using ItemTypeEnum = SSISReportGeneratorTask100.ReportService2005.ItemTypeEnum;
-using Policy = SSISReportGeneratorTask100.ReportService2005.Policy;
-using ReportParameter = SSISReportGeneratorTask100.ReportService2005.ReportParameter;
+using SSISReportGeneratorTask110.ReportExecution2005;
+using SSISReportGeneratorTask110.ReportService2006;
+using SSISReportGeneratorTask110.ReportingHandlers;
+using SSISReportGeneratorTask110.ReportService2005;
+using CatalogItem = SSISReportGeneratorTask110.ReportService2005.CatalogItem;
+using DataSource = SSISReportGeneratorTask110.ReportService2005.DataSource;
+using DataSourceReference = SSISReportGeneratorTask110.ReportService2005.DataSourceReference;
+using ItemTypeEnum = SSISReportGeneratorTask110.ReportService2005.ItemTypeEnum;
+using Policy = SSISReportGeneratorTask110.ReportService2005.Policy;
+using ReportParameter = SSISReportGeneratorTask110.ReportService2005.ReportParameter;
 using TaskHost = Microsoft.SqlServer.Dts.Runtime.TaskHost;
 using Variable = Microsoft.SqlServer.Dts.Runtime.Variable;
 using VariableDispenser = Microsoft.SqlServer.Dts.Runtime.VariableDispenser;
 
-namespace SSISReportGeneratorTask100
+namespace SSISReportGeneratorTask110
 {
     public partial class frmEditProperties : Form
     {
@@ -509,27 +509,20 @@ namespace SSISReportGeneratorTask100
         /// <returns></returns>
         private static object EvaluateExpression(string mappedParam, VariableDispenser variableDispenser)
         {
-            object variableObject = null;
+            object variableObject;
 
             try
             {
-                if (mappedParam.Contains("@"))
+                var expressionEvaluatorClass = new ExpressionEvaluator
                 {
-                    new ExpressionEvaluatorClass
-                    {
-                        Expression = mappedParam
-                    }.Evaluate(DtsConvert.GetExtendedInterface(variableDispenser),
-                               out variableObject,
-                               false);
-                }
-                else
-                {
-                    variableObject = mappedParam;
-                }
+                    Expression = mappedParam
+                };
+
+                expressionEvaluatorClass.Evaluate(DtsConvert.GetExtendedInterface(variableDispenser), out variableObject, false);
             }
-            catch (Exception)
+            catch (Exception) // for already initialized values
             {
-                variableObject = string.Empty;
+                variableObject = mappedParam;
             }
 
             return variableObject;

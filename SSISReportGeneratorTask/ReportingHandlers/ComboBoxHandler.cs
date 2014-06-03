@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SSISReportGeneratorTask100.ReportingHandlers
+namespace SSISReportGeneratorTask110.ReportingHandlers
 {
     public class ComboItem
     {

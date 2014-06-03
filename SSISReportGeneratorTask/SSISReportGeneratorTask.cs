@@ -6,21 +6,21 @@ using System.Linq;
 using System.Xml;
 using Microsoft.SqlServer.Dts.Runtime;
 using Microsoft.SqlServer.Dts.Runtime.Wrapper;
-using SSISReportGeneratorTask100.ReportingHandlers;
+using SSISReportGeneratorTask110.ReportingHandlers;
 using DTSExecResult = Microsoft.SqlServer.Dts.Runtime.DTSExecResult;
 using DTSProductLevel = Microsoft.SqlServer.Dts.Runtime.DTSProductLevel;
 using VariableDispenser = Microsoft.SqlServer.Dts.Runtime.VariableDispenser;
 
-namespace SSISReportGeneratorTask100.SSIS
+namespace SSISReportGeneratorTask110.SSIS
 {
     [DtsTask(
         DisplayName = "SSRS Report Generator Task",
-        UITypeName = "SSISReportGeneratorTask100.SSISReportGeneratorTaskUIInterface" +
-        ",SSISReportGeneratorTask100," +
-        "Version=1.3.0.0," +
+        UITypeName = "SSISReportGeneratorTask110.SSISReportGeneratorTaskUIInterface" +
+        ",SSISReportGeneratorTask110," +
+        "Version=2.0.0.0," +
         "Culture=Neutral," +
         "PublicKeyToken=baf53b3fe9523f48",
-        IconResource = "SSISReportGeneratorTask100.Report.ico",
+        IconResource = "SSISReportGeneratorTask110.Report.ico",
         TaskContact = "cosmin.vlasiu@gmail.com",
         RequiredProductLevel = DTSProductLevel.None
         )]

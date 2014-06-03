@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://schemas.microsoft.com/sqlserver/2006/03/15/reporting/reportingservices" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://schemas.microsoft.com/sqlserver/2006/03/15/reporting/reportingservices" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://schemas.microsoft.com/sqlserver/2006/03/15/reporting/reportingservices" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://schemas.microsoft.com/sqlserver/2006/03/15/reporting/reportingservices" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">The Reporting Services Web Service enables you to manage a report server and its contents including server settings, security, reports, subscriptions, and data sources.</wsdl:documentation>
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/sqlserver/2006/03/15/reporting/reportingservices">
@@ -41,9 +41,9 @@
         <s:sequence>
           <s:element minOccurs="1" maxOccurs="1" name="Bias" type="s:int" />
           <s:element minOccurs="1" maxOccurs="1" name="StandardBias" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="StandardDate" type="tns:SYSTEMTIME" />
+          <s:element minOccurs="0" maxOccurs="1" name="StandardDate" type="tns:SYSTEMTIME" />
           <s:element minOccurs="1" maxOccurs="1" name="DaylightBias" type="s:int" />
-          <s:element minOccurs="1" maxOccurs="1" name="DaylightDate" type="tns:SYSTEMTIME" />
+          <s:element minOccurs="0" maxOccurs="1" name="DaylightDate" type="tns:SYSTEMTIME" />
         </s:sequence>
       </s:complexType>
       <s:complexType name="SYSTEMTIME">
@@ -478,8 +478,8 @@
             <s:element minOccurs="0" maxOccurs="1" name="Report" type="s:string" />
             <s:element minOccurs="1" maxOccurs="1" name="ExecutionSetting" type="tns:ExecutionSettingEnum" />
             <s:choice minOccurs="1" maxOccurs="1">
-              <s:element minOccurs="0" maxOccurs="1" name="ScheduleDefinition" type="tns:ScheduleDefinition" />
               <s:element minOccurs="0" maxOccurs="1" name="NoSchedule" type="tns:NoSchedule" />
+              <s:element minOccurs="0" maxOccurs="1" name="ScheduleDefinition" type="tns:ScheduleDefinition" />
               <s:element minOccurs="0" maxOccurs="1" name="ScheduleReference" type="tns:ScheduleReference" />
             </s:choice>
           </s:sequence>
@@ -491,21 +491,9 @@
           <s:enumeration value="Snapshot" />
         </s:restriction>
       </s:simpleType>
-      <s:complexType name="ScheduleDefinition">
+      <s:complexType name="NoSchedule">
         <s:complexContent mixed="false">
-          <s:extension base="tns:ScheduleDefinitionOrReference">
-            <s:sequence>
-              <s:element minOccurs="1" maxOccurs="1" name="StartDateTime" type="s:dateTime" />
-              <s:element minOccurs="0" maxOccurs="1" name="EndDate" type="s:dateTime" />
-              <s:choice minOccurs="1" maxOccurs="1">
-                <s:element minOccurs="0" maxOccurs="1" name="MonthlyRecurrence" type="tns:MonthlyRecurrence" />
-                <s:element minOccurs="0" maxOccurs="1" name="MinuteRecurrence" type="tns:MinuteRecurrence" />
-                <s:element minOccurs="0" maxOccurs="1" name="DailyRecurrence" type="tns:DailyRecurrence" />
-                <s:element minOccurs="0" maxOccurs="1" name="WeeklyRecurrence" type="tns:WeeklyRecurrence" />
-                <s:element minOccurs="0" maxOccurs="1" name="MonthlyDOWRecurrence" type="tns:MonthlyDOWRecurrence" />
-              </s:choice>
-            </s:sequence>
-          </s:extension>
+          <s:extension base="tns:ScheduleDefinitionOrReference" />
         </s:complexContent>
       </s:complexType>
       <s:complexType name="ScheduleDefinitionOrReference" />
@@ -519,22 +507,23 @@
           </s:extension>
         </s:complexContent>
       </s:complexType>
-      <s:complexType name="NoSchedule">
+      <s:complexType name="ScheduleDefinition">
         <s:complexContent mixed="false">
-          <s:extension base="tns:ScheduleDefinitionOrReference" />
-        </s:complexContent>
-      </s:complexType>
-      <s:complexType name="MonthlyRecurrence">
-        <s:complexContent mixed="false">
-          <s:extension base="tns:RecurrencePattern">
+          <s:extension base="tns:ScheduleDefinitionOrReference">
             <s:sequence>
-              <s:element minOccurs="0" maxOccurs="1" name="Days" type="s:string" />
-              <s:element minOccurs="0" maxOccurs="1" name="MonthsOfYear" type="tns:MonthsOfYearSelector" />
+              <s:element minOccurs="1" maxOccurs="1" name="StartDateTime" type="s:dateTime" />
+              <s:element minOccurs="0" maxOccurs="1" name="EndDate" type="s:dateTime" />
+              <s:choice minOccurs="1" maxOccurs="1">
+                <s:element minOccurs="0" maxOccurs="1" name="MonthlyDOWRecurrence" type="tns:MonthlyDOWRecurrence" />
+                <s:element minOccurs="0" maxOccurs="1" name="DailyRecurrence" type="tns:DailyRecurrence" />
+                <s:element minOccurs="0" maxOccurs="1" name="MinuteRecurrence" type="tns:MinuteRecurrence" />
+                <s:element minOccurs="0" maxOccurs="1" name="WeeklyRecurrence" type="tns:WeeklyRecurrence" />
+                <s:element minOccurs="0" maxOccurs="1" name="MonthlyRecurrence" type="tns:MonthlyRecurrence" />
+              </s:choice>
             </s:sequence>
           </s:extension>
         </s:complexContent>
       </s:complexType>
-      <s:complexType name="RecurrencePattern" />
       <s:complexType name="MonthlyDOWRecurrence">
         <s:complexContent mixed="false">
           <s:extension base="tns:RecurrencePattern">
@@ -546,25 +535,16 @@
           </s:extension>
         </s:complexContent>
       </s:complexType>
-      <s:simpleType name="WeekNumberEnum">
-        <s:restriction base="s:string">
-          <s:enumeration value="FirstWeek" />
-          <s:enumeration value="SecondWeek" />
-          <s:enumeration value="ThirdWeek" />
-          <s:enumeration value="FourthWeek" />
-          <s:enumeration value="LastWeek" />
-        </s:restriction>
-      </s:simpleType>
-      <s:complexType name="DaysOfWeekSelector">
-        <s:sequence>
-          <s:element minOccurs="1" maxOccurs="1" name="Sunday" type="s:boolean" />
-          <s:element minOccurs="1" maxOccurs="1" name="Monday" type="s:boolean" />
-          <s:element minOccurs="1" maxOccurs="1" name="Tuesday" type="s:boolean" />
-          <s:element minOccurs="1" maxOccurs="1" name="Wednesday" type="s:boolean" />
-          <s:element minOccurs="1" maxOccurs="1" name="Thursday" type="s:boolean" />
-          <s:element minOccurs="1" maxOccurs="1" name="Friday" type="s:boolean" />
-          <s:element minOccurs="1" maxOccurs="1" name="Saturday" type="s:boolean" />
-        </s:sequence>
+      <s:complexType name="RecurrencePattern" />
+      <s:complexType name="MonthlyRecurrence">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:RecurrencePattern">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Days" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="MonthsOfYear" type="tns:MonthsOfYearSelector" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
       </s:complexType>
       <s:complexType name="MonthsOfYearSelector">
         <s:sequence>
@@ -592,14 +572,16 @@
           </s:extension>
         </s:complexContent>
       </s:complexType>
-      <s:complexType name="DailyRecurrence">
-        <s:complexContent mixed="false">
-          <s:extension base="tns:RecurrencePattern">
-            <s:sequence>
-              <s:element minOccurs="1" maxOccurs="1" name="DaysInterval" type="s:int" />
-            </s:sequence>
-          </s:extension>
-        </s:complexContent>
+      <s:complexType name="DaysOfWeekSelector">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Sunday" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="Monday" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="Tuesday" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="Wednesday" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="Thursday" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="Friday" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="Saturday" type="s:boolean" />
+        </s:sequence>
       </s:complexType>
       <s:complexType name="MinuteRecurrence">
         <s:complexContent mixed="false">
@@ -610,6 +592,24 @@
           </s:extension>
         </s:complexContent>
       </s:complexType>
+      <s:complexType name="DailyRecurrence">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:RecurrencePattern">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="DaysInterval" type="s:int" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:simpleType name="WeekNumberEnum">
+        <s:restriction base="s:string">
+          <s:enumeration value="FirstWeek" />
+          <s:enumeration value="SecondWeek" />
+          <s:enumeration value="ThirdWeek" />
+          <s:enumeration value="FourthWeek" />
+          <s:enumeration value="LastWeek" />
+        </s:restriction>
+      </s:simpleType>
       <s:element name="SetExecutionOptionsResponse">
         <s:complexType />
       </s:element>
@@ -625,9 +625,9 @@
           <s:sequence>
             <s:element minOccurs="1" maxOccurs="1" name="ExecutionSetting" type="tns:ExecutionSettingEnum" />
             <s:choice minOccurs="1" maxOccurs="1">
-              <s:element minOccurs="0" maxOccurs="1" name="NoSchedule" type="tns:NoSchedule" />
-              <s:element minOccurs="0" maxOccurs="1" name="ScheduleDefinition" type="tns:ScheduleDefinition" />
               <s:element minOccurs="0" maxOccurs="1" name="ScheduleReference" type="tns:ScheduleReference" />
+              <s:element minOccurs="0" maxOccurs="1" name="ScheduleDefinition" type="tns:ScheduleDefinition" />
+              <s:element minOccurs="0" maxOccurs="1" name="NoSchedule" type="tns:NoSchedule" />
             </s:choice>
           </s:sequence>
         </s:complexType>
@@ -638,12 +638,22 @@
             <s:element minOccurs="0" maxOccurs="1" name="Report" type="s:string" />
             <s:element minOccurs="1" maxOccurs="1" name="CacheReport" type="s:boolean" />
             <s:choice minOccurs="1" maxOccurs="1">
-              <s:element minOccurs="0" maxOccurs="1" name="ScheduleExpiration" type="tns:ScheduleExpiration" />
               <s:element minOccurs="0" maxOccurs="1" name="TimeExpiration" type="tns:TimeExpiration" />
+              <s:element minOccurs="0" maxOccurs="1" name="ScheduleExpiration" type="tns:ScheduleExpiration" />
             </s:choice>
           </s:sequence>
         </s:complexType>
       </s:element>
+      <s:complexType name="TimeExpiration">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ExpirationDefinition">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="Minutes" type="s:int" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ExpirationDefinition" />
       <s:complexType name="ScheduleExpiration">
         <s:complexContent mixed="false">
           <s:extension base="tns:ExpirationDefinition">
@@ -652,16 +662,6 @@
                 <s:element minOccurs="0" maxOccurs="1" name="ScheduleDefinition" type="tns:ScheduleDefinition" />
                 <s:element minOccurs="0" maxOccurs="1" name="ScheduleReference" type="tns:ScheduleReference" />
               </s:choice>
-            </s:sequence>
-          </s:extension>
-        </s:complexContent>
-      </s:complexType>
-      <s:complexType name="ExpirationDefinition" />
-      <s:complexType name="TimeExpiration">
-        <s:complexContent mixed="false">
-          <s:extension base="tns:ExpirationDefinition">
-            <s:sequence>
-              <s:element minOccurs="1" maxOccurs="1" name="Minutes" type="s:int" />
             </s:sequence>
           </s:extension>
         </s:complexContent>
@@ -880,9 +880,9 @@
         <s:sequence>
           <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
           <s:choice minOccurs="1" maxOccurs="1">
+            <s:element minOccurs="0" maxOccurs="1" name="DataSourceDefinition" type="tns:DataSourceDefinition" />
             <s:element minOccurs="0" maxOccurs="1" name="InvalidDataSourceReference" type="tns:InvalidDataSourceReference" />
             <s:element minOccurs="0" maxOccurs="1" name="DataSourceReference" type="tns:DataSourceReference" />
-            <s:element minOccurs="0" maxOccurs="1" name="DataSourceDefinition" type="tns:DataSourceDefinition" />
           </s:choice>
         </s:sequence>
       </s:complexType>
@@ -988,9 +988,9 @@
             <s:element minOccurs="1" maxOccurs="1" name="EnableManualSnapshotCreation" type="s:boolean" />
             <s:element minOccurs="1" maxOccurs="1" name="KeepExecutionSnapshots" type="s:boolean" />
             <s:choice minOccurs="1" maxOccurs="1">
+              <s:element minOccurs="0" maxOccurs="1" name="ScheduleDefinition" type="tns:ScheduleDefinition" />
               <s:element minOccurs="0" maxOccurs="1" name="ScheduleReference" type="tns:ScheduleReference" />
               <s:element minOccurs="0" maxOccurs="1" name="NoSchedule" type="tns:NoSchedule" />
-              <s:element minOccurs="0" maxOccurs="1" name="ScheduleDefinition" type="tns:ScheduleDefinition" />
             </s:choice>
           </s:sequence>
         </s:complexType>
@@ -1244,9 +1244,9 @@
       <s:complexType name="DataRetrievalPlan">
         <s:sequence>
           <s:choice minOccurs="1" maxOccurs="1">
-            <s:element minOccurs="0" maxOccurs="1" name="DataSourceDefinition" type="tns:DataSourceDefinition" />
-            <s:element minOccurs="0" maxOccurs="1" name="DataSourceReference" type="tns:DataSourceReference" />
             <s:element minOccurs="0" maxOccurs="1" name="InvalidDataSourceReference" type="tns:InvalidDataSourceReference" />
+            <s:element minOccurs="0" maxOccurs="1" name="DataSourceReference" type="tns:DataSourceReference" />
+            <s:element minOccurs="0" maxOccurs="1" name="DataSourceDefinition" type="tns:DataSourceDefinition" />
           </s:choice>
           <s:element minOccurs="0" maxOccurs="1" name="DataSet" type="tns:DataSetDefinition" />
         </s:sequence>
@@ -2097,6 +2097,9 @@
   </wsdl:message>
   <wsdl:message name="ListParentsSoapOut">
     <wsdl:part name="parameters" element="tns:ListParentsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListParentsServerInfoHeader">
+    <wsdl:part name="ServerInfoHeader" element="tns:ServerInfoHeader" />
   </wsdl:message>
   <wsdl:message name="ListParentsTrustedUserHeader">
     <wsdl:part name="TrustedUserHeader" element="tns:TrustedUserHeader" />
@@ -3519,6 +3522,7 @@
       </wsdl:input>
       <wsdl:output>
         <soap:body use="literal" />
+        <soap:header message="tns:ListParentsServerInfoHeader" part="ServerInfoHeader" use="literal" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="ListDependentItems">
@@ -4500,6 +4504,7 @@
       </wsdl:input>
       <wsdl:output>
         <soap12:body use="literal" />
+        <soap12:header message="tns:ListParentsServerInfoHeader" part="ServerInfoHeader" use="literal" />
       </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="ListDependentItems">
@@ -5408,10 +5413,10 @@
   <wsdl:service name="ReportingService2006">
     <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">The Reporting Services Web Service enables you to manage a report server and its contents including server settings, security, reports, subscriptions, and data sources.</wsdl:documentation>
     <wsdl:port name="ReportingService2006Soap" binding="tns:ReportingService2006Soap">
-      <soap:address location="http://srv-sql7:80/ReportServer/ReportService2006.asmx" />
+      <soap:address location="http://ws-cvl:80/ReportServer/ReportService2006.asmx" />
     </wsdl:port>
     <wsdl:port name="ReportingService2006Soap12" binding="tns:ReportingService2006Soap12">
-      <soap12:address location="http://srv-sql7:80/ReportServer/ReportService2006.asmx" />
+      <soap12:address location="http://ws-cvl:80/ReportServer/ReportService2006.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

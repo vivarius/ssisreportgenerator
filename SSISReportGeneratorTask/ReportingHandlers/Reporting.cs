@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Net;
 using Microsoft.SqlServer.Dts.Runtime;
-using SSISReportGeneratorTask100.ReportExecution2005;
+using SSISReportGeneratorTask110.ReportExecution2005;
 
-namespace SSISReportGeneratorTask100.ReportingHandlers
+namespace SSISReportGeneratorTask110.ReportingHandlers
 {
     public struct ReportParameter
     {

@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using Microsoft.DataTransformationServices.Controls;
 using Microsoft.SqlServer.Dts.Runtime;
 
-namespace SSISReportGeneratorTask100
+namespace SSISReportGeneratorTask110
 {
     public partial class frmEmail : Form
     {

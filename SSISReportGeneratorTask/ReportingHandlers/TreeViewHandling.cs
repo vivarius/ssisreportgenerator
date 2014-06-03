@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using SSISReportGeneratorTask100.ReportService2005;
+using SSISReportGeneratorTask110.ReportService2005;
 
-namespace SSISReportGeneratorTask100.ReportingHandlers
+namespace SSISReportGeneratorTask110.ReportingHandlers
 {
     internal class TreeViewHandling
     {

@@ -7,7 +7,7 @@ using Microsoft.SqlServer.Dts.Runtime;
 using Microsoft.SqlServer.Dts.Runtime.Wrapper;
 using VariableDispenser = Microsoft.SqlServer.Dts.Runtime.VariableDispenser;
 
-namespace SSISReportGeneratorTask100
+namespace SSISReportGeneratorTask110
 {
     internal static class Keys
     {
@@ -170,18 +170,18 @@ namespace SSISReportGeneratorTask100
             if (regex.IsMatch(mappedParam))
                 return mappedParam;
 
-            object variableObject = null;
+            object variableObject;
 
             try
             {
-                var expressionEvaluatorClass = new ExpressionEvaluatorClass
+                var expressionEvaluatorClass = new ExpressionEvaluator
                 {
                     Expression = mappedParam
                 };
 
                 expressionEvaluatorClass.Evaluate(DtsConvert.GetExtendedInterface(variableDispenser), out variableObject, false);
             }
-            catch (Exception) // for hardcoded values
+            catch (Exception) // for already initialized values
             {
                 variableObject = mappedParam;
             }

@@ -2,7 +2,7 @@
 using System.Text;
 using System.Xml.Serialization;
 
-namespace SSISReportGeneratorTask100.ReportingHandlers
+namespace SSISReportGeneratorTask110.ReportingHandlers
 {
     class Serializer
     {

@@ -1,4 +1,4 @@
-﻿namespace SSISReportGeneratorTask100
+﻿namespace SSISReportGeneratorTask110
 {
     partial class frmEditProperties
     {
@@ -11,7 +11,7 @@
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
+        protected void Dispose(bool disposing)
         {
             if (disposing && (components != null))
             {
@@ -109,12 +109,14 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.btCancel = new System.Windows.Forms.Button();
             this.btOk = new System.Windows.Forms.Button();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
@@ -178,6 +180,7 @@
             this.lbSiteName.Size = new System.Drawing.Size(57, 13);
             this.lbSiteName.TabIndex = 46;
             this.lbSiteName.Text = "Site name:";
+            this.lbSiteName.Visible = false;
             // 
             // txSiteName
             // 
@@ -186,6 +189,7 @@
             this.txSiteName.Name = "txSiteName";
             this.txSiteName.Size = new System.Drawing.Size(100, 20);
             this.txSiteName.TabIndex = 45;
+            this.txSiteName.Visible = false;
             // 
             // chkSharPointIntegratedMode
             // 
@@ -197,6 +201,7 @@
             this.chkSharPointIntegratedMode.Text = "SharePoint";
             this.toolTip1.SetToolTip(this.chkSharPointIntegratedMode, "SharePoint Integrated Mode");
             this.chkSharPointIntegratedMode.UseVisualStyleBackColor = true;
+            this.chkSharPointIntegratedMode.Visible = false;
             // 
             // cmbSourceVariables
             // 
@@ -671,7 +676,7 @@
             this.grdColParams.Name = "grdColParams";
             this.grdColParams.ReadOnly = true;
             this.grdColParams.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.grdColParams.Width = 66;
+            this.grdColParams.Width = 64;
             // 
             // grdColType
             // 
@@ -680,7 +685,7 @@
             this.grdColType.HeaderText = "Param Type";
             this.grdColType.Name = "grdColType";
             this.grdColType.ReadOnly = true;
-            this.grdColType.Width = 89;
+            this.grdColType.Width = 87;
             // 
             // grdColNullable
             // 
@@ -895,6 +900,17 @@
             this.panel1.Size = new System.Drawing.Size(769, 32);
             this.panel1.TabIndex = 4;
             // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(3, 8);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(196, 13);
+            this.linkLabel1.TabIndex = 4;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "http://ssisreportgenerator.codeplex.com";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
             // btCancel
             // 
             this.btCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
@@ -915,17 +931,6 @@
             this.btOk.UseVisualStyleBackColor = true;
             this.btOk.Click += new System.EventHandler(this.btOk_Click);
             // 
-            // linkLabel1
-            // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(3, 8);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(196, 13);
-            this.linkLabel1.TabIndex = 4;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "http://ssisreportgenerator.codeplex.com";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
-            // 
             // frmEditProperties
             // 
             this.AcceptButton = this.btOk;
@@ -939,10 +944,12 @@
             this.Text = "Report Generator";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);

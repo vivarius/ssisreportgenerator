@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace SSISReportGeneratorTask100
+namespace SSISReportGeneratorTask110
 {
     public partial class frmPreviewReport : Form
     {

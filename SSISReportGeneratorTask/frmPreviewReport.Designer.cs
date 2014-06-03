@@ -1,4 +1,4 @@
-﻿namespace SSISReportGeneratorTask100
+﻿namespace SSISReportGeneratorTask110
 {
     partial class frmPreviewReport
     {

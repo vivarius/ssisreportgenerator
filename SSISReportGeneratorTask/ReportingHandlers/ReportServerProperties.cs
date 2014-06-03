@@ -2,16 +2,16 @@
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using SSISReportGeneratorTask100.ReportService2005;
-using SSISReportGeneratorTask100.ReportService2006;
-using CatalogItem = SSISReportGeneratorTask100.ReportService2005.CatalogItem;
-using CredentialRetrievalEnum = SSISReportGeneratorTask100.ReportService2005.CredentialRetrievalEnum;
-using DataSource = SSISReportGeneratorTask100.ReportService2005.DataSource;
-using DataSourceDefinition = SSISReportGeneratorTask100.ReportService2005.DataSourceDefinition;
-using DataSourceReference = SSISReportGeneratorTask100.ReportService2005.DataSourceReference;
-using ItemTypeEnum = SSISReportGeneratorTask100.ReportService2005.ItemTypeEnum;
+using SSISReportGeneratorTask110.ReportService2005;
+using SSISReportGeneratorTask110.ReportService2006;
+using CatalogItem = SSISReportGeneratorTask110.ReportService2005.CatalogItem;
+using CredentialRetrievalEnum = SSISReportGeneratorTask110.ReportService2005.CredentialRetrievalEnum;
+using DataSource = SSISReportGeneratorTask110.ReportService2005.DataSource;
+using DataSourceDefinition = SSISReportGeneratorTask110.ReportService2005.DataSourceDefinition;
+using DataSourceReference = SSISReportGeneratorTask110.ReportService2005.DataSourceReference;
+using ItemTypeEnum = SSISReportGeneratorTask110.ReportService2005.ItemTypeEnum;
 
-namespace SSISReportGeneratorTask100.ReportingHandlers
+namespace SSISReportGeneratorTask110.ReportingHandlers
 {
     public class ReportServerProperties : IDisposable
     {
